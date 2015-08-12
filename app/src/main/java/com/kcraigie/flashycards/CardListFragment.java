@@ -42,7 +42,7 @@ public class CardListFragment extends android.support.v4.app.Fragment {
             }
         }
         SimpleAdapter sa = new SimpleAdapter(getActivity(), m_alCards, android.R.layout.simple_list_item_1,
-                new String[] { "front" }, new int[] { android.R.id.text1 });
+                new String[] { "front / back" }, new int[] { android.R.id.text1 });
         ListView lv = (ListView)getView().findViewById(R.id.card_list_view);
         lv.setAdapter(sa);
 
@@ -67,15 +67,9 @@ public class CardListFragment extends android.support.v4.app.Fragment {
 
         etDeckName.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
                 etCardFront.setEnabled(s.length() > 0);
@@ -101,6 +95,17 @@ public class CardListFragment extends android.support.v4.app.Fragment {
             }
         });
 
+        etCardFront.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Don't allow a card with only a back
+                etCardBack.setEnabled(s.length() > 0);
+            }
+        });
         etCardFront.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -115,10 +120,10 @@ public class CardListFragment extends android.support.v4.app.Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    String frontText = etCardFront.getText().toString();
-                    String backText = etCardBack.getText().toString();
-                    if (!frontText.isEmpty() || !backText.isEmpty()) {
-                        FCDB.Card card = m_deck.createCard(frontText, backText);
+                    String frontText = etCardFront.getText().toString().trim();
+                    String backText = etCardBack.getText().toString().trim();
+                    FCDB.Card card = m_deck.createCard(frontText, backText);
+                    if(card!=null) {
                         Wrappers.CardToMap ctm = new Wrappers.CardToMap(card);
                         m_alCards.add(ctm);
                         ListView lv = (ListView)getView().findViewById(R.id.card_list_view);

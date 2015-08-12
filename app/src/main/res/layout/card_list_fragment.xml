@@ -70,7 +70,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/hint_card_back"
             android:inputType="text"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:enabled="false" />
 
     </LinearLayout>
 

@@ -63,6 +63,10 @@ public class FCDB extends SQLiteOpenHelper {
 		}
 		
 		public Card createCard(String front, String back) {
+			// Gotta have at least a non-empty front
+			if(front==null || front.isEmpty()) {
+				return null;
+			}
 			SQLiteDatabase db = getDB();
 			Card card = null;
 			ContentValues cv = new ContentValues();
@@ -70,10 +74,8 @@ public class FCDB extends SQLiteOpenHelper {
 			String fcID = generateID();
 			cv.put("id", fcID);
 			cv.put("sequence", "SELECT max(sequence) FROM cards)+1");
-			if(front!=null) {
-				cv.put("front", front);
-			}
-			if(back!=null) {
+			cv.put("front", front);
+			if(back!=null && !back.isEmpty()) {
 				cv.put("back", back);
 			}
 			long cardRowID = db.insert("cards", null, cv);

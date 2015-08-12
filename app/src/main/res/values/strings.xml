@@ -6,7 +6,7 @@
     <string name="your_decks">Your Decks</string>
     <string name="hint_new_deck_name">New Deck Name…</string>
     <string name="label_deck_name">Deck Name</string>
-    <string name="label_cards">Cards</string>
+    <string name="label_cards">Cards (Front / Back)</string>
     <string name="hint_new_card">New Card…</string>
     <string name="hint_card_front">Card Front…</string>
     <string name="hint_card_back">Card Back…</string>

@@ -50,8 +50,15 @@ public class Wrappers {
 				@Override
 				public Iterator<java.util.Map.Entry<String, String>> iterator() {
 					java.util.ArrayList<java.util.Map.Entry<String, String>> al = new java.util.ArrayList<java.util.Map.Entry<String, String>>();
-					al.add(new java.util.AbstractMap.SimpleEntry<String, String>("front", m_card.getFront()));
-					al.add(new java.util.AbstractMap.SimpleEntry<String, String>("back", m_card.getBack()));
+                    String cardFront = m_card.getFront();
+                    String cardBack = m_card.getBack();
+                    String cardFrontSlashBack = cardFront;
+                    if(cardBack!=null) {
+                        cardFrontSlashBack += " / " + cardBack;
+                    }
+					al.add(new java.util.AbstractMap.SimpleEntry<String, String>("front", cardFront));
+					al.add(new java.util.AbstractMap.SimpleEntry<String, String>("back", cardBack));
+                    al.add(new java.util.AbstractMap.SimpleEntry<String, String>("front / back", cardFrontSlashBack));
 					return al.iterator();
 				}
 				@Override

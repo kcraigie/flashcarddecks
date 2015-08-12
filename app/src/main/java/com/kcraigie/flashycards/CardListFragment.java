@@ -41,7 +41,7 @@ public class CardListFragment extends android.support.v4.app.Fragment {
                 m_alCards.add(ctm);
             }
         }
-        SimpleAdapter sa = new SimpleAdapter(getActivity(), m_alCards, android.R.layout.simple_list_item_1,
+        SimpleAdapter sa = new SimpleAdapter(getActivity(), m_alCards, R.layout.card_list_item,
                 new String[] { "front / back" }, new int[] { android.R.id.text1 });
         ListView lv = (ListView)getView().findViewById(R.id.card_list_view);
         lv.setAdapter(sa);

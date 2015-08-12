@@ -8,7 +8,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 public class DeckListFragment extends android.support.v4.app.Fragment {
 
@@ -22,25 +26,62 @@ public class DeckListFragment extends android.support.v4.app.Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
 		FCDB db = FCDB.getInstance(getActivity());
 		java.util.ArrayList<java.util.Map<String,String>> al = new java.util.ArrayList<java.util.Map<String,String>>();
 		for(FCDB.Deck deck: db.iterateDecks()) {
 			Wrappers.DeckToMap dtm = new Wrappers.DeckToMap(deck);
 			al.add(dtm);
 		}
-		android.widget.ListAdapter la =
-				new android.widget.SimpleAdapter(getActivity(), al, android.R.layout.simple_list_item_1,
-						new String[] { "name" }, new int[] { android.R.id.text1 });
 		final ListView lv = (ListView)getView().findViewById(R.id.deck_list_view);
-		lv.setAdapter(la);
-		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		ListAdapter la = new SimpleAdapter(getActivity(), al, R.layout.deck_list_item,
+						new String[] { "name" }, new int[] { android.R.id.text1 }) {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(position);
-				FCDB.Deck deck = dtm.getDeck();
-				openDeck(deck);
+			public View getView(int position, final View convertView, ViewGroup parent) {
+				View v = super.getView(position, convertView, parent);
+
+				final ImageView iv0 = (ImageView)v.findViewById(R.id.card_list_item_edit);
+				iv0.setTag(position);
+				iv0.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						int pos = (int)iv0.getTag();
+						Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(pos);
+						FCDB.Deck deck = dtm.getDeck();
+						editDeck(deck);
+					}
+				});
+
+				final ImageView iv1 = (ImageView)v.findViewById(R.id.card_list_item_play);
+				iv1.setTag(position);
+				iv1.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Toast.makeText(getActivity(), "YOU PLAYED ITEM #" + iv1.getTag().toString(), Toast.LENGTH_SHORT).show();
+					}
+				});
+
+				final ImageView iv2 = (ImageView)v.findViewById(R.id.card_list_item_shuffle);
+				iv2.setTag(position);
+				iv2.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Toast.makeText(getActivity(), "YOU SHUFFLED ITEM #" + iv2.getTag().toString(), Toast.LENGTH_SHORT).show();
+					}
+				});
+
+				return v;
 			}
-		});
+		};
+		lv.setAdapter(la);
+//		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//				Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(position);
+//				FCDB.Deck deck = dtm.getDeck();
+//				openDeck(deck);
+//			}
+//		});
 
 		Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
 		toolbar.setTitle(getString(R.string.your_decks));
@@ -49,13 +90,13 @@ public class DeckListFragment extends android.support.v4.app.Fragment {
 		toolbar.getMenu().findItem(R.id.action_new_deck).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				openDeck(null);
+				editDeck(null);
 				return false;
 			}
 		});
 	}
 
-	private void openDeck(FCDB.Deck deck) {
+	private void editDeck(FCDB.Deck deck) {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 //				ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);

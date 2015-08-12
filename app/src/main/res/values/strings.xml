@@ -11,5 +11,6 @@
     <string name="hint_card_front">Card Front…</string>
     <string name="hint_card_back">Card Back…</string>
     <string name="label_decks">Decks</string>
+    <string name="edit_deck">Edit Deck…</string>
 
 </resources>

@@ -18,14 +18,31 @@
         android:minHeight="?android:attr/listPreferredItemHeightSmall" />
 
     <ImageView
-        android:id="@+id/card_list_item_delete"
+        android:id="@+id/card_list_item_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:clickable="true"
+        android:src="@drawable/ic_action_edit_black" />
+
+    <ImageView
+        android:id="@+id/card_list_item_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:clickable="true"
+        android:src="@drawable/ic_action_play_black" />
+    <!--android:paddingRight="?android:attr/listPreferredItemPaddingRight"-->
+    <!--android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"-->
+
+    <ImageView
+        android:id="@+id/card_list_item_shuffle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:paddingRight="?android:attr/listPreferredItemPaddingRight"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
         android:clickable="true"
-        android:onClick="onListItemDeleteClicked"
-        android:src="@drawable/ic_action_delete_black" />
+        android:src="@drawable/ic_action_shuffle_black" />
 
 </LinearLayout>

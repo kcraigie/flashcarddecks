@@ -75,16 +75,11 @@ public class CardListFragment extends android.support.v4.app.Fragment {
         final EditText etCardFront = (EditText)getView().findViewById(R.id.edit_card_front);
         final EditText etCardBack = (EditText)getView().findViewById(R.id.edit_card_back);
 
-        if(m_deck==null) {
-            toolbar.setTitle(getString(R.string.hint_new_deck_name));
-        } else {
-            String deckName = m_deck.getName();
-            if(!deckName.isEmpty()) {
-                toolbar.setTitle(deckName);
-                etDeckName.setText(deckName);
-                etCardFront.setEnabled(true);
-            }
+        toolbar.setTitle(getString(R.string.edit_deck));
+        if(m_deck!=null) {
+            etDeckName.setText(m_deck.getName());
         }
+        etCardFront.setEnabled(true);
 
         etDeckName.addTextChangedListener(new TextWatcher() {
             @Override

@@ -31,8 +31,27 @@ public class CardListFragment extends android.support.v4.app.Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(m_deck!=null) {
+            outState.putString("deck_id", m_deck.getID());
+        }
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if(savedInstanceState!=null) {
+            if(m_deck==null) {
+                String deckID = savedInstanceState.getString("deck_id");
+                if(deckID!=null) {
+                    FCDB db = FCDB.getInstance(getActivity());
+                    m_deck = db.findDeckByID(deckID);
+                }
+            }
+        }
 
         // Populate initial list of cards
         if(m_deck!=null) {
@@ -45,6 +64,8 @@ public class CardListFragment extends android.support.v4.app.Fragment {
                 new String[] { "front / back" }, new int[] { android.R.id.text1 });
         ListView lv = (ListView)getView().findViewById(R.id.card_list_view);
         lv.setAdapter(sa);
+
+        // TODO: Restore listview's scroll position after rotate
 
         final Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
         toolbar.getMenu().clear();

@@ -219,6 +219,16 @@ public class FCDB extends SQLiteOpenHelper {
 		return deck;
 	}
 
+	public Deck findDeckByID(String id) {
+		SQLiteDatabase db = getDB();
+		Deck deck = null;
+		Cursor cur = db.query("decks", null, "id=?", new String[] { id }, null, null, null, "1");
+		if(cur!=null && cur.moveToNext()) {
+			deck = new Deck(cur);
+		}
+		return deck;
+	}
+
 	private static FCDB theInstance = null;
 	public static synchronized FCDB getInstance(Context context) {
 		if(theInstance==null) {

@@ -8,9 +8,13 @@ public class MainActivity extends android.support.v7.app.AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main);
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.fragment_placeholder, new DeckListFragment(), "DLF");
-		ft.commitAllowingStateLoss();
+
+		if(savedInstanceState==null) {
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			ft.replace(R.id.fragment_placeholder, new DeckListFragment(), "DLF");
+			ft.commitAllowingStateLoss();
+		}
 	}
 }

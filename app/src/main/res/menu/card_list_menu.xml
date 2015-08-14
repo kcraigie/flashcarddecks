@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_new_card"
-        android:icon="@drawable/ic_action_new_white"
+        android:id="@+id/action_delete_deck"
+        android:icon="@drawable/ic_action_delete_white"
         app:showAsAction="ifRoom"
-        android:title="@string/action_new_card" />
+        android:title="@string/action_delete_deck" />
 
 </menu>

@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Base64;
+import android.util.Log;
 
 public class FCDB extends SQLiteOpenHelper {
 
@@ -202,6 +203,7 @@ public class FCDB extends SQLiteOpenHelper {
 	}
 
 	public Deck createDeck(String name) {
+		Log.d(getClass().toString(), "Creating deck with name: '" + name + "'");
 		SQLiteDatabase db = getDB();
 		Deck deck = null;
 		ContentValues cv = new ContentValues();
@@ -219,12 +221,22 @@ public class FCDB extends SQLiteOpenHelper {
 		return deck;
 	}
 
+	public void deleteDeck(Deck deck) {
+		Log.d(getClass().toString(), "Deleting deck with name: '" + deck.getName() + "' and ID: '" + deck.getID() + "'");
+		SQLiteDatabase db = getDB();
+		db.delete("decks", "id=?", new String [] { deck.getID() });
+		db.delete("cards", "deck_id=?", new String [] { deck.getID() });
+	}
+
 	public Deck findDeckByID(String id) {
 		SQLiteDatabase db = getDB();
 		Deck deck = null;
-		Cursor cur = db.query("decks", null, "id=?", new String[] { id }, null, null, null, "1");
+		Cursor cur = db.query("decks", null, "id=?", new String[]{id}, null, null, null, "1");
 		if(cur!=null && cur.moveToNext()) {
+			Log.d(getClass().toString(), "Found deck with name: '" + deck.getName() + "' by ID: '" + deck.getID() + "'");
 			deck = new Deck(cur);
+		} else {
+			Log.d(getClass().toString(), "Couldn't find deck by ID: '" + deck.getID() + "'");
 		}
 		return deck;
 	}

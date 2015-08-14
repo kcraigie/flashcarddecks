@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -57,7 +56,11 @@ public class DeckListFragment extends android.support.v4.app.Fragment {
 				iv1.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Toast.makeText(getActivity(), "YOU PLAYED ITEM #" + iv1.getTag().toString(), Toast.LENGTH_SHORT).show();
+						int pos = (int)iv1.getTag();
+						Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(pos);
+						FCDB.Deck deck = dtm.getDeck();
+//						Toast.makeText(getActivity(), getString(R.string.playing_deck, deck.getName()), Toast.LENGTH_SHORT).show();
+						playDeck(deck);
 					}
 				});
 
@@ -109,4 +112,17 @@ public class DeckListFragment extends android.support.v4.app.Fragment {
 		ft.commitAllowingStateLoss();
 	}
 
+	private void playDeck(FCDB.Deck deck) {
+//		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+//				ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+		PlayDeckFragment pdf = new PlayDeckFragment();
+		if(deck!=null) {
+			pdf.setDeck(deck);
+		}
+		ft.replace(R.id.fragment_placeholder, pdf, "PDF");
+		ft.addToBackStack(null);
+		ft.commitAllowingStateLoss();
+	}
 }

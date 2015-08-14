@@ -12,5 +12,8 @@
     <string name="hint_card_back">Card Back…</string>
     <string name="label_decks">Decks</string>
     <string name="edit_deck">Edit Deck…</string>
+    <string name="playing_deck">Playing: %s</string>
+    <string name="action_delete_deck">Delete Deck</string>
+    <string name="confirm_delete_deck">Are you sure you want to delete this deck?</string>
 
 </resources>

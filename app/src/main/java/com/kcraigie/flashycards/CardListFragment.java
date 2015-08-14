@@ -1,11 +1,14 @@
 package com.kcraigie.flashycards;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -70,6 +73,13 @@ public class CardListFragment extends android.support.v4.app.Fragment {
         final Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
         toolbar.getMenu().clear();
         toolbar.inflateMenu(R.menu.card_list_menu);
+        toolbar.getMenu().findItem(R.id.action_delete_deck).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                deleteDeck();
+                return false;
+            }
+        });
 
         final EditText etDeckName = (EditText)getView().findViewById(R.id.edit_deck_name);
         final EditText etCardFront = (EditText)getView().findViewById(R.id.edit_card_front);
@@ -157,6 +167,22 @@ public class CardListFragment extends android.support.v4.app.Fragment {
         };
         etCardFront.setOnEditorActionListener(oeal);
         etCardBack.setOnEditorActionListener(oeal);
+    }
+
+    private void deleteDeck() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+//        builder.setTitle(getString(R.string.confirm_delete));
+        builder.setMessage(getString(R.string.confirm_delete_deck));
+        builder.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FCDB db = FCDB.getInstance(getActivity());
+                db.deleteDeck(m_deck);
+                getFragmentManager().popBackStackImmediate();
+            }
+        });
+        builder.setNegativeButton(getString(android.R.string.cancel), null);
+        builder.show();
     }
 
 }

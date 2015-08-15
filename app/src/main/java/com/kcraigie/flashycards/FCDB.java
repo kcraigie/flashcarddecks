@@ -247,6 +247,19 @@ public class FCDB extends SQLiteOpenHelper {
 		return deck;
 	}
 
+	public Card findCardByID(String id) {
+		SQLiteDatabase db = getDB();
+		Card card = null;
+		Cursor cur = db.query("cards", null, "id=?", new String[]{id}, null, null, null, "1");
+		if(cur!=null && cur.moveToNext()) {
+			card = new Card(cur);
+			Log.d(getClass().toString(), "Found card with front: '" + card.getFront() + "' and back: '" + card.getBack() + "' by ID: '" + card.getID() + "'");
+		} else {
+			Log.d(getClass().toString(), "Couldn't find card by ID: '" + id + "'");
+		}
+		return card;
+	}
+
 	private static FCDB theInstance = null;
 	public static synchronized FCDB getInstance(Context context) {
 		if(theInstance==null) {

@@ -13,14 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import java.util.Map;
+
 public class CardListFragment extends android.support.v4.app.Fragment {
 
     private FCDB.Deck m_deck;
-    java.util.ArrayList<java.util.Map<String,String>> m_alCards = new java.util.ArrayList<java.util.Map<String,String>>();
+    java.util.ArrayList<Map<String,String>> m_alCards = new java.util.ArrayList<Map<String,String>>();
 
     public void setDeck(FCDB.Deck deck) {
         m_deck = deck;
@@ -63,9 +66,28 @@ public class CardListFragment extends android.support.v4.app.Fragment {
                 m_alCards.add(ctm);
             }
         }
+        final ListView lv = (ListView)getView().findViewById(R.id.card_list_view);
         SimpleAdapter sa = new SimpleAdapter(getActivity(), m_alCards, R.layout.card_list_item,
-                new String[] { "front / back" }, new int[] { android.R.id.text1 });
-        ListView lv = (ListView)getView().findViewById(R.id.card_list_view);
+                new String[] { "front / back" }, new int[] { android.R.id.text1 }) {
+            @Override
+            public View getView(int position, final View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+
+                final ImageView iv0 = (ImageView)v.findViewById(R.id.card_list_item_delete);
+                iv0.setTag(position);
+                iv0.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = (int)iv0.getTag();
+                        Wrappers.CardToMap ctm = (Wrappers.CardToMap)lv.getItemAtPosition(pos);
+                        FCDB.Card card = ctm.getCard();
+                        deleteCard(pos, card);
+                    }
+                });
+
+                return v;
+            }
+        };
         lv.setAdapter(sa);
 
         // TODO: Restore listview's scroll position after rotate
@@ -171,7 +193,6 @@ public class CardListFragment extends android.support.v4.app.Fragment {
 
     private void deleteDeck() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
-//        builder.setTitle(getString(R.string.confirm_delete));
         builder.setMessage(getString(R.string.confirm_delete_deck));
         builder.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             @Override
@@ -179,6 +200,24 @@ public class CardListFragment extends android.support.v4.app.Fragment {
                 FCDB db = FCDB.getInstance(getActivity());
                 db.deleteDeck(m_deck);
                 getFragmentManager().popBackStackImmediate();
+            }
+        });
+        builder.setNegativeButton(getString(android.R.string.cancel), null);
+        builder.show();
+    }
+
+    private void deleteCard(final int cardIndex, final FCDB.Card card) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+        builder.setMessage(getString(R.string.confirm_delete_card));
+        builder.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                m_alCards.remove(cardIndex);
+                FCDB db = FCDB.getInstance(getActivity());
+                db.deleteCard(card);
+                ListView lv = (ListView)getView().findViewById(R.id.card_list_view);
+                SimpleAdapter sa = (SimpleAdapter)lv.getAdapter();
+                sa.notifyDataSetChanged();
             }
         });
         builder.setNegativeButton(getString(android.R.string.cancel), null);

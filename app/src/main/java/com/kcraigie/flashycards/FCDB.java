@@ -228,15 +228,21 @@ public class FCDB extends SQLiteOpenHelper {
 		db.delete("cards", "deck_id=?", new String [] { deck.getID() });
 	}
 
+	public void deleteCard(Card card) {
+		Log.d(getClass().toString(), "Deleting card with front: '" + card.getFront() + "' and back: '" + (card.getBack() != null ? card.getBack() : "") + "' and ID: '" + card.getID() + "'");
+		SQLiteDatabase db = getDB();
+		db.delete("cards", "id=?", new String [] { card.getID() });
+	}
+
 	public Deck findDeckByID(String id) {
 		SQLiteDatabase db = getDB();
 		Deck deck = null;
 		Cursor cur = db.query("decks", null, "id=?", new String[]{id}, null, null, null, "1");
 		if(cur!=null && cur.moveToNext()) {
-			Log.d(getClass().toString(), "Found deck with name: '" + deck.getName() + "' by ID: '" + deck.getID() + "'");
 			deck = new Deck(cur);
+			Log.d(getClass().toString(), "Found deck with name: '" + deck.getName() + "' by ID: '" + deck.getID() + "'");
 		} else {
-			Log.d(getClass().toString(), "Couldn't find deck by ID: '" + deck.getID() + "'");
+			Log.d(getClass().toString(), "Couldn't find deck by ID: '" + id + "'");
 		}
 		return deck;
 	}

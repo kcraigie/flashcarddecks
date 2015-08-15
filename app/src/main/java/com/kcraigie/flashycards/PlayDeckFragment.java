@@ -19,14 +19,20 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class PlayDeckFragment extends Fragment {
     private FCDB.Deck m_deck;
 
-    public void setDeck(FCDB.Deck deck) {
+    public void setDeck(FCDB.Deck deck, boolean shuffle) {
         m_deck = deck;
+        if(shuffle) {
+
+            // TODO: Implement shuffling (will need to persist shuffled indices for rotate)
+
+        }
     }
 
     @Override
@@ -60,6 +66,15 @@ public class PlayDeckFragment extends Fragment {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 toggleHideyBar();
+                return true;
+            }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+
+                // TODO: Implement card flipping
+                Toast.makeText(getActivity(), "TODO: IMPLEMENT CARD FLIPPING", Toast.LENGTH_LONG).show();
+
                 return true;
             }
         };

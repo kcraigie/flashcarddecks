@@ -18,7 +18,7 @@
         android:minHeight="?android:attr/listPreferredItemHeightSmall" />
 
     <ImageView
-        android:id="@+id/card_list_item_edit"
+        android:id="@+id/deck_list_item_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -26,7 +26,7 @@
         android:src="@drawable/ic_action_edit_black" />
 
     <ImageView
-        android:id="@+id/card_list_item_play"
+        android:id="@+id/deck_list_item_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -36,7 +36,7 @@
     <!--android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"-->
 
     <ImageView
-        android:id="@+id/card_list_item_shuffle"
+        android:id="@+id/deck_list_item_shuffle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

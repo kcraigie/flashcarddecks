@@ -18,6 +18,14 @@
         android:minHeight="?android:attr/listPreferredItemHeightSmall" />
 
     <ImageView
+        android:id="@+id/card_list_item_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:clickable="true"
+        android:src="@drawable/ic_action_edit_black" />
+
+    <ImageView
         android:id="@+id/card_list_item_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

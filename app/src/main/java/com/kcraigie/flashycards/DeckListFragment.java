@@ -39,7 +39,7 @@ public class DeckListFragment extends android.support.v4.app.Fragment {
 			public View getView(int position, final View convertView, ViewGroup parent) {
 				View v = super.getView(position, convertView, parent);
 
-				final ImageView iv0 = (ImageView)v.findViewById(R.id.card_list_item_edit);
+				final ImageView iv0 = (ImageView)v.findViewById(R.id.deck_list_item_edit);
 				iv0.setTag(position);
 				iv0.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -51,7 +51,7 @@ public class DeckListFragment extends android.support.v4.app.Fragment {
 					}
 				});
 
-				final ImageView iv1 = (ImageView)v.findViewById(R.id.card_list_item_play);
+				final ImageView iv1 = (ImageView)v.findViewById(R.id.deck_list_item_play);
 				iv1.setTag(position);
 				iv1.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -60,16 +60,20 @@ public class DeckListFragment extends android.support.v4.app.Fragment {
 						Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(pos);
 						FCDB.Deck deck = dtm.getDeck();
 //						Toast.makeText(getActivity(), getString(R.string.playing_deck, deck.getName()), Toast.LENGTH_SHORT).show();
-						playDeck(deck);
+						playDeck(deck, false);
 					}
 				});
 
-				final ImageView iv2 = (ImageView)v.findViewById(R.id.card_list_item_shuffle);
+				final ImageView iv2 = (ImageView)v.findViewById(R.id.deck_list_item_shuffle);
 				iv2.setTag(position);
 				iv2.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Toast.makeText(getActivity(), "YOU SHUFFLED ITEM #" + iv2.getTag().toString(), Toast.LENGTH_SHORT).show();
+						int pos = (int)iv1.getTag();
+						Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(pos);
+						FCDB.Deck deck = dtm.getDeck();
+//						Toast.makeText(getActivity(), getString(R.string.playing_deck, deck.getName()), Toast.LENGTH_SHORT).show();
+						playDeck(deck, true);
 					}
 				});
 
@@ -112,14 +116,21 @@ public class DeckListFragment extends android.support.v4.app.Fragment {
 		ft.commitAllowingStateLoss();
 	}
 
-	private void playDeck(FCDB.Deck deck) {
+	private void playDeck(FCDB.Deck deck, boolean shuffle) {
 //		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 //				ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 		PlayDeckFragment pdf = new PlayDeckFragment();
 		if(deck!=null) {
-			pdf.setDeck(deck);
+			pdf.setDeck(deck, shuffle);
+
+			if(shuffle) {
+
+				Toast.makeText(getActivity(), "TODO: IMPLEMENT DECK SHUFFLING", Toast.LENGTH_LONG).show();
+
+			}
+
 		}
 		ft.replace(R.id.fragment_placeholder, pdf, "PDF");
 		ft.addToBackStack(null);

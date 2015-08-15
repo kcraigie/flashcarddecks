@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Map;
 
@@ -72,12 +73,28 @@ public class CardListFragment extends android.support.v4.app.Fragment {
             public View getView(int position, final View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
 
-                final ImageView iv0 = (ImageView)v.findViewById(R.id.card_list_item_delete);
+                final ImageView iv0 = (ImageView)v.findViewById(R.id.card_list_item_edit);
                 iv0.setTag(position);
                 iv0.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         int pos = (int)iv0.getTag();
+                        Wrappers.CardToMap ctm = (Wrappers.CardToMap)lv.getItemAtPosition(pos);
+                        FCDB.Card card = ctm.getCard();
+//                        deleteCard(pos, card);
+
+                        // TODO: Implement card editing
+						Toast.makeText(getActivity(), "TODO: IMPLEMENT CARD EDITING", Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+                final ImageView iv1 = (ImageView)v.findViewById(R.id.card_list_item_delete);
+                iv1.setTag(position);
+                iv1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = (int)iv1.getTag();
                         Wrappers.CardToMap ctm = (Wrappers.CardToMap)lv.getItemAtPosition(pos);
                         FCDB.Card card = ctm.getCard();
                         deleteCard(pos, card);

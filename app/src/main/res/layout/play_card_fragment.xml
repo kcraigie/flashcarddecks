@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <!--android:background="@android:drawable/gallery_thumb">-->
 
-    <TextView android:id="@android:id/text1"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_material_dark">
+
+    <!-- Using these FrameLayouts for flipping between front and back-->
+    <FrameLayout
+        android:id="@+id/frame2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_material_light">
+
+    <TextView
+        android:id="@android:id/text2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical|center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    <!--android:text="@string/hello_world"-->
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
 
-</LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frame1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_material_light">
+
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
+
+    </FrameLayout>
+
+</FrameLayout>

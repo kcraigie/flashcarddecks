@@ -1,6 +1,7 @@
 package com.kcraigie.flashycards;
 
-import android.os.Build;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,17 +10,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -58,23 +54,24 @@ public class PlayDeckFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.play_deck_fragment, container, false);
 
         final ViewPager vp = (ViewPager)rootView.findViewById(R.id.pager);
-        PlayDeckAdapter pda = new PlayDeckAdapter(getFragmentManager(), m_deck);
+        final PlayDeckAdapter pda = new PlayDeckAdapter(getFragmentManager(), m_deck);
         vp.setAdapter(pda);
 
         // Set up detection of single tap
         GestureDetector.SimpleOnGestureListener sogl = new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                toggleHideyBar();
+//                toggleHideyBar();
+                int currentPosition = vp.getCurrentItem();
+                PlayCardFragment pcf = (PlayCardFragment) pda.instantiateItem(vp, currentPosition);
+                if(pcf!=null) {
+                    pcf.flipCard();
+                }
                 return true;
             }
 
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-
-                // TODO: Implement card flipping
-                Toast.makeText(getActivity(), "TODO: IMPLEMENT CARD FLIPPING", Toast.LENGTH_LONG).show();
-
                 return true;
             }
         };
@@ -107,81 +104,81 @@ public class PlayDeckFragment extends Fragment {
         toolbar.setTitle(getString(R.string.playing_deck, (m_deck != null ? m_deck.getName() : "?")));
     }
 
-    /**
-     * Detects and toggles immersive mode (also known as "hidey bar" mode).
-     */
-    public void toggleHideyBar() {
-        final Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
-
-        // The UI options currently enabled are represented by a bitfield.
-        // getSystemUiVisibility() gives us that bitfield.
-        int uiOptions = getActivity().getWindow().getDecorView().getSystemUiVisibility();
-        int newUiOptions = uiOptions;
-        boolean isImmersiveModeEnabled =
-                ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
-
-        // TODO: Fix this so it's not so juddery and janky and weird
-
-        if (isImmersiveModeEnabled) {
-            Log.i(getClass().toString(), "Turning immersive mode mode off...");
-            Animation animFadeIn = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
-            animFadeIn.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
-            animFadeIn.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    toolbar.setVisibility(View.VISIBLE);
-                }
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-            toolbar.startAnimation(animFadeIn);
-        } else {
-            Log.i(getClass().toString(), "Turning immersive mode mode on...");
-            Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
-            animFadeOut.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
-            animFadeOut.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    toolbar.setVisibility(View.GONE);
-                }
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-            toolbar.startAnimation(animFadeOut);
-        }
-
-        // Navigation bar hiding:  Backwards compatible to ICS.
-        if(Build.VERSION.SDK_INT >= 14) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        }
-
-        // Status bar hiding: Backwards compatible to Jellybean
-        if(Build.VERSION.SDK_INT >= 16) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
-        }
-
-        // Immersive mode: Backward compatible to KitKat.
-        // Note that this flag doesn't do anything by itself, it only augments the behavior
-        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
-        // all three flags are being toggled together.
-        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
-        // Sticky immersive mode differs in that it makes the navigation and status bars
-        // semi-transparent, and the UI flag does not get cleared when the user interacts with
-        // the screen.
-        if(Build.VERSION.SDK_INT >= 18) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        }
-
-        getActivity().getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
-    }
+//    /**
+//     * Detects and toggles immersive mode (also known as "hidey bar" mode).
+//     */
+//    public void toggleHideyBar() {
+//        final Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
+//
+//        // The UI options currently enabled are represented by a bitfield.
+//        // getSystemUiVisibility() gives us that bitfield.
+//        int uiOptions = getActivity().getWindow().getDecorView().getSystemUiVisibility();
+//        int newUiOptions = uiOptions;
+//        boolean isImmersiveModeEnabled =
+//                ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
+//
+//        // TODO: Fix this so it's not so juddery and janky and weird
+//
+//        if (isImmersiveModeEnabled) {
+//            Log.i(getClass().toString(), "Turning immersive mode mode off...");
+//            Animation animFadeIn = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
+//            animFadeIn.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
+//            animFadeIn.setAnimationListener(new Animation.AnimationListener() {
+//                @Override
+//                public void onAnimationStart(Animation animation) {
+//                }
+//                @Override
+//                public void onAnimationEnd(Animation animation) {
+//                    toolbar.setVisibility(View.VISIBLE);
+//                }
+//                @Override
+//                public void onAnimationRepeat(Animation animation) {
+//                }
+//            });
+//            toolbar.startAnimation(animFadeIn);
+//        } else {
+//            Log.i(getClass().toString(), "Turning immersive mode mode on...");
+//            Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+//            animFadeOut.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
+//            animFadeOut.setAnimationListener(new Animation.AnimationListener() {
+//                @Override
+//                public void onAnimationStart(Animation animation) {
+//                }
+//                @Override
+//                public void onAnimationEnd(Animation animation) {
+//                    toolbar.setVisibility(View.GONE);
+//                }
+//                @Override
+//                public void onAnimationRepeat(Animation animation) {
+//                }
+//            });
+//            toolbar.startAnimation(animFadeOut);
+//        }
+//
+//        // Navigation bar hiding:  Backwards compatible to ICS.
+//        if(Build.VERSION.SDK_INT >= 14) {
+//            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+//        }
+//
+//        // Status bar hiding: Backwards compatible to Jellybean
+//        if(Build.VERSION.SDK_INT >= 16) {
+//            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+//        }
+//
+//        // Immersive mode: Backward compatible to KitKat.
+//        // Note that this flag doesn't do anything by itself, it only augments the behavior
+//        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
+//        // all three flags are being toggled together.
+//        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
+//        // Sticky immersive mode differs in that it makes the navigation and status bars
+//        // semi-transparent, and the UI flag does not get cleared when the user interacts with
+//        // the screen.
+//        if(Build.VERSION.SDK_INT >= 18) {
+//            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+//        }
+//
+//        getActivity().getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+//    }
 
     private class PlayDeckAdapter extends FragmentStatePagerAdapter {
         ArrayList<FCDB.Card> m_alCards;
@@ -215,9 +212,35 @@ public class PlayDeckFragment extends Fragment {
 
     static public class PlayCardFragment extends Fragment {
         FCDB.Card m_card;
+        boolean m_isShowingFront = true;
 
         public void setCard(FCDB.Card card) {
             m_card = card;
+        }
+
+        public void flipCard() {
+            View v1 = getView().findViewById(R.id.frame1);
+            View v2 = getView().findViewById(R.id.frame2);
+
+            AnimatorSet as0 = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.card_flip_down_out);
+            if(m_isShowingFront) {
+                as0.setTarget(v1);
+            } else {
+                as0.setTarget(v2);
+            }
+
+            AnimatorSet as1 = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.card_flip_down_in);
+            if(m_isShowingFront) {
+                as1.setTarget(v2);
+            } else {
+                as1.setTarget(v1);
+            }
+
+            m_isShowingFront = !m_isShowingFront;
+
+            AnimatorSet as = new AnimatorSet();
+            as.playTogether(as0, as1);
+            as.start();
         }
 
         @Override
@@ -233,13 +256,18 @@ public class PlayDeckFragment extends Fragment {
                 }
             }
 
-            View v = inflater.inflate(R.layout.play_card_fragment, container, false);
+            View rootView = inflater.inflate(R.layout.play_card_fragment, container, false);
 
-            // Just a simple fragment with a single TextView in the middle
-            View tv = v.findViewById(android.R.id.text1);
-            ((TextView)tv).setText(m_card.getFront());
+            View tv1 = rootView.findViewById(android.R.id.text1);
+            ((TextView)tv1).setText(m_card.getFront());
 
-            return v;
+            View tv2 = rootView.findViewById(android.R.id.text2);
+            ((TextView)tv2).setText(m_card.getBack());
+
+            View frame2 = rootView.findViewById(R.id.frame2);
+            frame2.setRotationX(90);
+
+            return rootView;
         }
 
         @Override
@@ -248,6 +276,11 @@ public class PlayDeckFragment extends Fragment {
 
             if(m_card!=null) {
                 outState.putString("card_id", m_card.getID());
+
+
+                // TODO: Save whether displaying front or back?
+
+
             }
         }
     }

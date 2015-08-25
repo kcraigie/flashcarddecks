@@ -18,17 +18,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class PlayDeckFragment extends Fragment {
-    private FCDB.Deck m_deck;
+    FCDB.Deck m_deck;
+    boolean m_shouldShuffle;
 
-    public void setDeck(FCDB.Deck deck, boolean shuffle) {
+    public void setDeck(FCDB.Deck deck, boolean shouldShuffle) {
         m_deck = deck;
-        if(shuffle) {
-
-            // TODO: Implement shuffling (will need to persist shuffled indices for rotate)
-
-        }
+        m_shouldShuffle = shouldShuffle;
     }
 
     @Override
@@ -54,7 +52,7 @@ public class PlayDeckFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.play_deck_fragment, container, false);
 
         final ViewPager vp = (ViewPager)rootView.findViewById(R.id.pager);
-        final PlayDeckAdapter pda = new PlayDeckAdapter(getFragmentManager(), m_deck);
+        final PlayDeckAdapter pda = new PlayDeckAdapter(getFragmentManager(), m_deck, m_shouldShuffle);
         vp.setAdapter(pda);
 
         // Set up detection of single tap
@@ -180,17 +178,19 @@ public class PlayDeckFragment extends Fragment {
 //        getActivity().getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
 //    }
 
-    private class PlayDeckAdapter extends FragmentStatePagerAdapter {
+    class PlayDeckAdapter extends FragmentStatePagerAdapter {
         ArrayList<FCDB.Card> m_alCards;
 
-        public PlayDeckAdapter(FragmentManager fm, FCDB.Deck deck) {
+        public PlayDeckAdapter(FragmentManager fm, FCDB.Deck deck, boolean shouldShuffle) {
             super(fm);
 
             m_alCards = new ArrayList<FCDB.Card>();
             for(FCDB.Card card: m_deck.iterateCards()) {
                 m_alCards.add(card);
             }
-
+            if(shouldShuffle) {
+                Collections.shuffle(m_alCards);
+            }
         }
 
         @Override

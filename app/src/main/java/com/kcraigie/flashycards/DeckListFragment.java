@@ -116,21 +116,14 @@ public class DeckListFragment extends android.support.v4.app.Fragment {
 		ft.commitAllowingStateLoss();
 	}
 
-	private void playDeck(FCDB.Deck deck, boolean shuffle) {
+	private void playDeck(FCDB.Deck deck, boolean shouldShuffle) {
 //		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 //				ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 		PlayDeckFragment pdf = new PlayDeckFragment();
 		if(deck!=null) {
-			pdf.setDeck(deck, shuffle);
-
-			if(shuffle) {
-
-				Toast.makeText(getActivity(), "TODO: IMPLEMENT DECK SHUFFLING", Toast.LENGTH_LONG).show();
-
-			}
-
+			pdf.setDeck(deck, shouldShuffle);
 		}
 		ft.replace(R.id.fragment_placeholder, pdf, "PDF");
 		ft.addToBackStack(null);

@@ -212,7 +212,7 @@ public class PlayDeckFragment extends Fragment {
 
     static public class PlayCardFragment extends Fragment {
         FCDB.Card m_card;
-        boolean m_isShowingFront = true;
+        boolean m_showingBack;
 
         public void setCard(FCDB.Card card) {
             m_card = card;
@@ -223,20 +223,20 @@ public class PlayDeckFragment extends Fragment {
             View v2 = getView().findViewById(R.id.frame2);
 
             AnimatorSet as0 = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.card_flip_down_out);
-            if(m_isShowingFront) {
-                as0.setTarget(v1);
-            } else {
+            if(m_showingBack) {
                 as0.setTarget(v2);
+            } else {
+                as0.setTarget(v1);
             }
 
             AnimatorSet as1 = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.card_flip_down_in);
-            if(m_isShowingFront) {
-                as1.setTarget(v2);
-            } else {
+            if(m_showingBack) {
                 as1.setTarget(v1);
+            } else {
+                as1.setTarget(v2);
             }
 
-            m_isShowingFront = !m_isShowingFront;
+            m_showingBack = !m_showingBack;
 
             AnimatorSet as = new AnimatorSet();
             as.playTogether(as0, as1);
@@ -254,6 +254,7 @@ public class PlayDeckFragment extends Fragment {
                         m_card = db.findCardByID(cardID);
                     }
                 }
+                m_showingBack = savedInstanceState.getBoolean("showing_back");
             }
 
             View rootView = inflater.inflate(R.layout.play_card_fragment, container, false);
@@ -264,8 +265,13 @@ public class PlayDeckFragment extends Fragment {
             View tv2 = rootView.findViewById(android.R.id.text2);
             ((TextView)tv2).setText(m_card.getBack());
 
-            View frame2 = rootView.findViewById(R.id.frame2);
-            frame2.setRotationX(90);
+            if(m_showingBack) {
+                View f1 = rootView.findViewById(R.id.frame1);
+                f1.setRotationX(-90.0f);
+            } else {
+                View f2 = rootView.findViewById(R.id.frame2);
+                f2.setRotationX(90.0f);
+            }
 
             return rootView;
         }
@@ -276,11 +282,9 @@ public class PlayDeckFragment extends Fragment {
 
             if(m_card!=null) {
                 outState.putString("card_id", m_card.getID());
-
-
-                // TODO: Save whether displaying front or back?
-
-
+                if(m_showingBack) {
+                    outState.putBoolean("showing_back", m_showingBack);
+                }
             }
         }
     }

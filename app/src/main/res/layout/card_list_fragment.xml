@@ -1,78 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/abc_dialog_padding_top_material"
-    android:layout_marginBottom="@dimen/abc_dialog_padding_top_material"
-    android:layout_marginLeft="@dimen/abc_dialog_padding_material"
-    android:layout_marginRight="@dimen/abc_dialog_padding_material">
-
-    <TextView
-        android:id="@+id/label_deck_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_deck_name"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
-
-    <EditText
-        android:id="@+id/edit_deck_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_new_deck_name"
-        android:inputType="text"
-        android:layout_below="@+id/label_deck_name" />
-
-    <Space
-        android:id="@+id/space0"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_dialog_padding_top_material"
-        android:layout_below="@+id/edit_deck_name" />
-
-    <TextView
-        android:id="@+id/label_cards"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_cards"
-        android:layout_below="@+id/space0" />
-
-    <ListView
-        android:id="@+id/card_list_view"
-        android:transcriptMode="alwaysScroll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/label_cards"
-        android:layout_above="@+id/new_card_layout" />
+    android:layout_height="wrap_content"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/new_card_layout"
+        android:id="@+id/section_deck_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true">
+        android:orientation="vertical"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:background="@drawable/abc_btn_default_mtrl_shape"
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/label_deck_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_deck_name" />
 
         <EditText
-            android:id="@+id/edit_card_front"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:id="@+id/edit_deck_name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_new_card"
-            android:inputType="text"
-            android:enabled="false" />
-
-        <EditText
-            android:id="@+id/edit_card_back"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_card_back"
-            android:inputType="text"
-            android:visibility="gone"
-            android:enabled="false" />
+            android:hint="@string/hint_new_deck_name"
+            android:inputType="text" />
 
     </LinearLayout>
 
-</RelativeLayout>
+    <LinearLayout
+        android:id="@+id/section_cards"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/abc_btn_default_mtrl_shape"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/label_cards"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_cards" />
+
+        <ListView
+            android:id="@+id/card_list_view"
+            android:transcriptMode="alwaysScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/transparent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/section_new_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/abc_btn_default_mtrl_shape"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:elevation="4dp">
+
+        <LinearLayout
+            android:id="@+id/new_card_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edit_card_front"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_new_card"
+                android:inputType="text"
+                android:enabled="false" />
+
+            <EditText
+                android:id="@+id/edit_card_back"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_card_back"
+                android:inputType="text"
+                android:visibility="gone"
+                android:enabled="false" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

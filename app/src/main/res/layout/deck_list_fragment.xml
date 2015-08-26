@@ -3,25 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_marginTop="@dimen/abc_dialog_padding_top_material"
-    android:layout_marginBottom="@dimen/abc_dialog_padding_top_material"
-    android:layout_marginLeft="@dimen/abc_dialog_padding_material"
-    android:layout_marginRight="@dimen/abc_dialog_padding_material">
-
-    <TextView
-        android:id="@+id/label_deck_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_decks"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
 
     <ListView
         android:id="@+id/deck_list_view"
         android:transcriptMode="alwaysScroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/label_deck_name" />
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

@@ -4,11 +4,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/abc_btn_default_mtrl_shape"
-    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-    android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-    android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+    android:background="@drawable/cardlike"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:elevation="4dp">
 

@@ -1,4 +1,4 @@
-package com.kcraigie.flashycards;
+package com.kcraigie.flashcards;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 public class DeckListFragment extends android.support.v4.app.Fragment {
 

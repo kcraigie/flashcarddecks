@@ -1,4 +1,4 @@
-package com.kcraigie.flashycards;
+package com.kcraigie.flashcards;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">FlashyCards</string>
+    <string name="app_name">Flashcards</string>
     <string name="action_new_deck">New Deck</string>
     <string name="action_new_card">New Card</string>
     <string name="your_decks">Your Decks</string>

@@ -1,4 +1,4 @@
-package com.kcraigie.flashycards;
+package com.kcraigie.flashcards;
 
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;

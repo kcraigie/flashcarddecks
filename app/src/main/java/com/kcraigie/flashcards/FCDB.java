@@ -1,4 +1,4 @@
-package com.kcraigie.flashycards;
+package com.kcraigie.flashcards;
 
 import java.util.Iterator;
 
@@ -15,7 +15,7 @@ public class FCDB extends SQLiteOpenHelper {
     private static final int DB_VERSION = 1;
 	
 	public FCDB(Context context) {
-		super(context, "flashy_cards", null, DB_VERSION);
+		super(context, "flashcards", null, DB_VERSION);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class FCDB extends SQLiteOpenHelper {
 			if(cur!=null) {
 				fcs = new Iterable<Card>() {
 					public Iterator<Card> iterator() {
-						return new FlashyCardIterator(cur);
+						return new CardIterator(cur);
 					}
 				};
 			}
@@ -164,8 +164,8 @@ public class FCDB extends SQLiteOpenHelper {
 		}
 	}
 	
-	public class FlashyCardIterator extends MyBaseIterator<Card> {
-		public FlashyCardIterator(Cursor cursor) { super(cursor); }
+	public class CardIterator extends MyBaseIterator<Card> {
+		public CardIterator(Cursor cursor) { super(cursor); }
 
 		@Override
 		public Card next() {

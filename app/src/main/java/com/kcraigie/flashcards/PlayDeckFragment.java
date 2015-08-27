@@ -59,7 +59,6 @@ public class PlayDeckFragment extends Fragment {
         GestureDetector.SimpleOnGestureListener sogl = new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-//                toggleHideyBar();
                 int currentPosition = vp.getCurrentItem();
                 PlayCardFragment pcf = (PlayCardFragment) pda.instantiateItem(vp, currentPosition);
                 if(pcf!=null) {
@@ -101,82 +100,6 @@ public class PlayDeckFragment extends Fragment {
         toolbar.getMenu().clear();
         toolbar.setTitle(getString(R.string.playing_deck, (m_deck != null ? m_deck.getName() : "?")));
     }
-
-//    /**
-//     * Detects and toggles immersive mode (also known as "hidey bar" mode).
-//     */
-//    public void toggleHideyBar() {
-//        final Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
-//
-//        // The UI options currently enabled are represented by a bitfield.
-//        // getSystemUiVisibility() gives us that bitfield.
-//        int uiOptions = getActivity().getWindow().getDecorView().getSystemUiVisibility();
-//        int newUiOptions = uiOptions;
-//        boolean isImmersiveModeEnabled =
-//                ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
-//
-//        // TODO: Fix this so it's not so juddery and janky and weird
-//
-//        if (isImmersiveModeEnabled) {
-//            Log.i(getClass().toString(), "Turning immersive mode mode off...");
-//            Animation animFadeIn = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
-//            animFadeIn.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
-//            animFadeIn.setAnimationListener(new Animation.AnimationListener() {
-//                @Override
-//                public void onAnimationStart(Animation animation) {
-//                }
-//                @Override
-//                public void onAnimationEnd(Animation animation) {
-//                    toolbar.setVisibility(View.VISIBLE);
-//                }
-//                @Override
-//                public void onAnimationRepeat(Animation animation) {
-//                }
-//            });
-//            toolbar.startAnimation(animFadeIn);
-//        } else {
-//            Log.i(getClass().toString(), "Turning immersive mode mode on...");
-//            Animation animFadeOut = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
-//            animFadeOut.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
-//            animFadeOut.setAnimationListener(new Animation.AnimationListener() {
-//                @Override
-//                public void onAnimationStart(Animation animation) {
-//                }
-//                @Override
-//                public void onAnimationEnd(Animation animation) {
-//                    toolbar.setVisibility(View.GONE);
-//                }
-//                @Override
-//                public void onAnimationRepeat(Animation animation) {
-//                }
-//            });
-//            toolbar.startAnimation(animFadeOut);
-//        }
-//
-//        // Navigation bar hiding:  Backwards compatible to ICS.
-//        if(Build.VERSION.SDK_INT >= 14) {
-//            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-//        }
-//
-//        // Status bar hiding: Backwards compatible to Jellybean
-//        if(Build.VERSION.SDK_INT >= 16) {
-//            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
-//        }
-//
-//        // Immersive mode: Backward compatible to KitKat.
-//        // Note that this flag doesn't do anything by itself, it only augments the behavior
-//        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
-//        // all three flags are being toggled together.
-//        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
-//        // Sticky immersive mode differs in that it makes the navigation and status bars
-//        // semi-transparent, and the UI flag does not get cleared when the user interacts with
-//        // the screen.
-//        if(Build.VERSION.SDK_INT >= 18) {
-//            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-//        }
-//
-//        getActivity().getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
-//    }
 
     class PlayDeckAdapter extends FragmentStatePagerAdapter {
         ArrayList<FCDB.Card> m_alCards;

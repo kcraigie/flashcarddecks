@@ -101,9 +101,17 @@ public class DeckListFragment extends Fragment {
 		});
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		final ListView lv = (ListView)getView().findViewById(R.id.deck_list_view);
+		SimpleAdapter sa = (SimpleAdapter)lv.getAdapter();
+		sa.notifyDataSetChanged();
+	}
+
 	private void editDeck(FCDB.Deck deck) {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
-//				ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 		CardListFragment clf = new CardListFragment();
 		if(deck!=null) {
@@ -117,7 +125,6 @@ public class DeckListFragment extends Fragment {
 	private void playDeck(FCDB.Deck deck, boolean shouldShuffle) {
 //		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
-//				ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 		PlayDeckFragment pdf = new PlayDeckFragment();
 		if(deck!=null) {

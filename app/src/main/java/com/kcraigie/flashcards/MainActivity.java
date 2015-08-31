@@ -1,9 +1,10 @@
 package com.kcraigie.flashcards;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.app.FragmentTransaction;
 
-public class MainActivity extends android.support.v7.app.AppCompatActivity {
+public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

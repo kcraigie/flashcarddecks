@@ -48,6 +48,7 @@ public class PlayDeckFragment extends Fragment {
         }
 
         View rootView = inflater.inflate(R.layout.play_deck_fragment, container, false);
+        rootView.setCameraDistance(rootView.getCameraDistance() * 10);
 
         final ViewPager vp = (ViewPager)rootView.findViewById(R.id.pager);
         final PlayDeckAdapter pda = new PlayDeckAdapter(getFragmentManager(), m_deck, m_shouldShuffle);

@@ -141,21 +141,17 @@ public class PlayDeckFragment extends Fragment {
         }
 
         public void flipCard() {
+            FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+            CardFragment cf = new CardFragment();
             if(m_showingBack) {
-                getChildFragmentManager().popBackStack();
+                cf.setCardText(m_card.getFront());
+                ft.setCustomAnimations(R.animator.card_flip_left_in, R.animator.card_flip_left_out);
             } else {
-                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out,
-                        R.animator.card_flip_left_in, R.animator.card_flip_left_out);
-//                ft.setCustomAnimations(R.animator.card_flip_up_in, R.animator.card_flip_up_out,
-//                        R.animator.card_flip_down_in, R.animator.card_flip_down_out);
-                CardFragment cf = new CardFragment();
                 cf.setCardText(m_card.getBack());
-                ft.replace(R.id.card_fragment_placeholder, cf);
-                ft.addToBackStack(null);
-                ft.commitAllowingStateLoss();
+                ft.setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out);
             }
-
+            ft.replace(R.id.card_fragment_placeholder, cf);
+            ft.commitAllowingStateLoss();
             m_showingBack = !m_showingBack;
         }
 

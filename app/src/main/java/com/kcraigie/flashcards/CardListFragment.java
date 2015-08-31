@@ -7,25 +7,23 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Map;
 
 public class CardListFragment extends Fragment {
 
-    private FCDB.Deck m_deck;
+    FCDB.Deck m_deck;
     java.util.ArrayList<Map<String,String>> m_alCards = new java.util.ArrayList<Map<String,String>>();
+    FCDB.Card m_editingCard;
 
     public void setDeck(FCDB.Deck deck) {
         m_deck = deck;
@@ -44,6 +42,9 @@ public class CardListFragment extends Fragment {
         if(m_deck!=null) {
             outState.putString("deck_id", m_deck.getID());
         }
+        if(m_editingCard!=null) {
+            outState.putString("editing_card_id", m_editingCard.getID());
+        }
     }
 
     @Override
@@ -58,7 +59,19 @@ public class CardListFragment extends Fragment {
                     m_deck = db.findDeckByID(deckID);
                 }
             }
+            if(m_editingCard ==null) {
+                String editingCardID = savedInstanceState.getString("editing_card_id");
+                if(editingCardID!=null) {
+                    FCDB db = FCDB.getInstance(getActivity());
+                    m_editingCard = db.findCardByID(editingCardID);
+                }
+            }
         }
+
+        final EditText etDeckName = (EditText)getView().findViewById(R.id.edit_deck_name);
+        final EditText etCardFront = (EditText)getView().findViewById(R.id.edit_card_front);
+        final EditText etCardBack = (EditText)getView().findViewById(R.id.edit_card_back);
+        final ImageButton ibAddCard = (ImageButton)getView().findViewById(R.id.edit_card_add);
 
         // Populate initial list of cards
         if(m_deck!=null) {
@@ -68,7 +81,7 @@ public class CardListFragment extends Fragment {
             }
         }
         final ListView lv = (ListView)getView().findViewById(R.id.card_list_view);
-        SimpleAdapter sa = new SimpleAdapter(getActivity(), m_alCards, R.layout.card_list_item,
+        final SimpleAdapter sa = new SimpleAdapter(getActivity(), m_alCards, R.layout.card_list_item,
                 new String[] { "front / back" }, new int[] { android.R.id.text1 }) {
             @Override
             public View getView(int position, final View convertView, ViewGroup parent) {
@@ -82,11 +95,7 @@ public class CardListFragment extends Fragment {
                         int pos = (int)iv0.getTag();
                         Wrappers.CardToMap ctm = (Wrappers.CardToMap)lv.getItemAtPosition(pos);
                         FCDB.Card card = ctm.getCard();
-//                        deleteCard(pos, card);
-
-                        // TODO: Implement card editing
-						Toast.makeText(getActivity(), "TODO: IMPLEMENT CARD EDITING", Toast.LENGTH_LONG).show();
-
+                        editCard(card);
                     }
                 });
 
@@ -120,15 +129,10 @@ public class CardListFragment extends Fragment {
             }
         });
 
-        final EditText etDeckName = (EditText)getView().findViewById(R.id.edit_deck_name);
-        final EditText etCardFront = (EditText)getView().findViewById(R.id.edit_card_front);
-        final EditText etCardBack = (EditText)getView().findViewById(R.id.edit_card_back);
-
         toolbar.setTitle(getString(R.string.edit_deck));
         if(m_deck!=null) {
             etDeckName.setText(m_deck.getName());
         }
-        etCardFront.setEnabled(true);
 
         etDeckName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -137,7 +141,9 @@ public class CardListFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                etCardFront.setEnabled(s.length() > 0);
+                boolean enabled = s.length()>0;
+                etCardFront.setEnabled(enabled);
+                ibAddCard.setEnabled(enabled);
             }
         });
         etDeckName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -162,50 +168,58 @@ public class CardListFragment extends Fragment {
 
         etCardFront.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 // Don't allow a card with only a back
-                etCardBack.setEnabled(s.length() > 0);
+                boolean enabled = s.length() > 0;
+                etCardBack.setEnabled(enabled);
+                ibAddCard.setEnabled(enabled);
             }
         });
         etCardFront.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    ((EditText) getView().findViewById(R.id.edit_card_front)).setHint(R.string.hint_card_front);
-                    getView().findViewById(R.id.edit_card_back).setVisibility(View.VISIBLE);
+                    etCardFront.setHint(R.string.hint_card_front);
+                    etCardBack.setVisibility(View.VISIBLE);
+                    ibAddCard.setVisibility(View.VISIBLE);
                 }
             }
         });
 
-        TextView.OnEditorActionListener oeal = new TextView.OnEditorActionListener() {
+        ibAddCard.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    String frontText = etCardFront.getText().toString().trim();
-                    String backText = etCardBack.getText().toString().trim();
-                    FCDB.Card card = m_deck.createCard(frontText, backText);
-                    if(card!=null) {
-                        Wrappers.CardToMap ctm = new Wrappers.CardToMap(card);
-                        m_alCards.add(ctm);
-                        ListView lv = (ListView)getView().findViewById(R.id.card_list_view);
-                        SimpleAdapter sa = (SimpleAdapter)lv.getAdapter();
-                        etCardFront.setText("");
-                        etCardBack.setText("");
-                        sa.notifyDataSetChanged();
-//                        lv.smoothScrollToPosition(lv.getCount()-1);
-                        etCardFront.requestFocus();
-                        return true;
-                    }
-                }
-                return false;
+            public void onClick(View v) {
+                saveCard();
             }
-        };
-        etCardFront.setOnEditorActionListener(oeal);
-        etCardBack.setOnEditorActionListener(oeal);
+        });
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        final EditText etCardFront = (EditText)getView().findViewById(R.id.edit_card_front);
+        final EditText etCardBack = (EditText)getView().findViewById(R.id.edit_card_back);
+        final ImageButton ibAddCard = (ImageButton)getView().findViewById(R.id.edit_card_add);
+
+        if(!(etCardFront.hasFocus() || etCardBack.hasFocus() || etCardFront.length()>0 || etCardBack.length()>0)) {
+            etCardBack.setVisibility(View.GONE);
+        }
+        if(!(etCardFront.length()>0 || etCardBack.length()>0)) {
+            etCardBack.setEnabled(true);
+        }
+        if(m_editingCard !=null) {
+            ibAddCard.setImageResource(R.drawable.ic_action_done_black);
+        }
     }
 
     private void deleteDeck() {
@@ -232,8 +246,8 @@ public class CardListFragment extends Fragment {
                 m_alCards.remove(cardIndex);
                 FCDB db = FCDB.getInstance(getActivity());
                 db.deleteCard(card);
-                ListView lv = (ListView)getView().findViewById(R.id.card_list_view);
-                SimpleAdapter sa = (SimpleAdapter)lv.getAdapter();
+                ListView lv = (ListView) getView().findViewById(R.id.card_list_view);
+                SimpleAdapter sa = (SimpleAdapter) lv.getAdapter();
                 sa.notifyDataSetChanged();
             }
         });
@@ -241,4 +255,47 @@ public class CardListFragment extends Fragment {
         builder.show();
     }
 
+    private void editCard(FCDB.Card card) {
+        EditText etCardFront = (EditText)getView().findViewById(R.id.edit_card_front);
+        EditText etCardBack = (EditText)getView().findViewById(R.id.edit_card_back);
+        ImageButton ibAddCard = (ImageButton)getView().findViewById(R.id.edit_card_add);
+
+        m_editingCard = card;
+        etCardFront.setText(card.getFront());
+        etCardBack.setText(card.getBack());
+        ibAddCard.setImageResource(R.drawable.ic_action_done_black);
+        etCardFront.requestFocus();
+    }
+
+    private void saveCard() {
+        EditText etCardFront = (EditText) getView().findViewById(R.id.edit_card_front);
+        EditText etCardBack = (EditText) getView().findViewById(R.id.edit_card_back);
+        ImageButton ibAddCard = (ImageButton) getView().findViewById(R.id.edit_card_add);
+        ListView lv = (ListView) getView().findViewById(R.id.card_list_view);
+        SimpleAdapter sa = (SimpleAdapter) lv.getAdapter();
+
+        String frontText = etCardFront.getText().toString().trim();
+        String backText = etCardBack.getText().toString().trim();
+
+        FCDB.Card card = m_editingCard;
+        if (card != null) {
+            card.setFrontAndBack(frontText, backText);
+        } else {
+            card = m_deck.createCard(frontText, backText);
+            if(card!=null) {
+                Wrappers.CardToMap ctm = new Wrappers.CardToMap(card);
+                m_alCards.add(ctm);
+            }
+        }
+        m_editingCard = null;
+
+        if (card != null) {
+            etCardFront.setText("");
+            etCardBack.setText("");
+            ibAddCard.setImageResource(R.drawable.ic_action_new_black);
+            sa.notifyDataSetChanged();
+//            lv.smoothScrollToPosition(lv.getCount()-1);
+            etCardFront.requestFocus();
+        }
+    }
 }

@@ -86,8 +86,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_new_card"
-                android:inputType="text"
-                android:enabled="false" />
+                android:inputType="text" />
 
             <EditText
                 android:id="@+id/edit_card_back"
@@ -95,9 +94,15 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_card_back"
-                android:inputType="text"
-                android:visibility="gone"
-                android:enabled="false" />
+                android:inputType="text" />
+
+            <ImageButton
+                android:id="@+id/edit_card_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_new_black"
+                android:layout_gravity="center_vertical"
+                android:background="@android:color/transparent"/>
 
         </LinearLayout>
 

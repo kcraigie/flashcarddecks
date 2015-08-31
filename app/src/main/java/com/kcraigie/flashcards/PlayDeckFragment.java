@@ -144,10 +144,10 @@ public class PlayDeckFragment extends Fragment {
                 getChildFragmentManager().popBackStack();
             } else {
                 FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-//                ft.setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out,
-//                        R.animator.card_flip_left_in, R.animator.card_flip_left_out);
-                ft.setCustomAnimations(R.animator.card_flip_up_in, R.animator.card_flip_up_out,
-                        R.animator.card_flip_down_in, R.animator.card_flip_down_out);
+                ft.setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out,
+                        R.animator.card_flip_left_in, R.animator.card_flip_left_out);
+//                ft.setCustomAnimations(R.animator.card_flip_up_in, R.animator.card_flip_up_out,
+//                        R.animator.card_flip_down_in, R.animator.card_flip_down_out);
                 CardFragment cf = new CardFragment();
                 cf.setCardText(m_card.getBack());
                 ft.replace(R.id.card_fragment_placeholder, cf);

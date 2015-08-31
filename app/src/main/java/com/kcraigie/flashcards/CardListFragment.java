@@ -1,5 +1,6 @@
 package com.kcraigie.flashcards;
 
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -21,7 +22,7 @@ import android.widget.Toast;
 
 import java.util.Map;
 
-public class CardListFragment extends android.support.v4.app.Fragment {
+public class CardListFragment extends Fragment {
 
     private FCDB.Deck m_deck;
     java.util.ArrayList<Map<String,String>> m_alCards = new java.util.ArrayList<Map<String,String>>();

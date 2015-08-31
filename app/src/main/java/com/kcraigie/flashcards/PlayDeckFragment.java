@@ -1,12 +1,11 @@
 package com.kcraigie.flashcards;
 
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -38,7 +37,6 @@ public class PlayDeckFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         if(savedInstanceState!=null) {
             if(m_deck==null) {
                 String deckID = savedInstanceState.getString("deck_id");
@@ -142,33 +140,26 @@ public class PlayDeckFragment extends Fragment {
         }
 
         public void flipCard() {
-            View v1 = getView().findViewById(R.id.frame1);
-            View v2 = getView().findViewById(R.id.frame2);
-
-            AnimatorSet as0 = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.card_flip_down_out);
             if(m_showingBack) {
-                as0.setTarget(v2);
+                getChildFragmentManager().popBackStack();
             } else {
-                as0.setTarget(v1);
-            }
-
-            AnimatorSet as1 = (AnimatorSet) AnimatorInflater.loadAnimator(getActivity(), R.animator.card_flip_down_in);
-            if(m_showingBack) {
-                as1.setTarget(v1);
-            } else {
-                as1.setTarget(v2);
+                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+//                ft.setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out,
+//                        R.animator.card_flip_left_in, R.animator.card_flip_left_out);
+                ft.setCustomAnimations(R.animator.card_flip_up_in, R.animator.card_flip_up_out,
+                        R.animator.card_flip_down_in, R.animator.card_flip_down_out);
+                CardFragment cf = new CardFragment();
+                cf.setCardText(m_card.getBack());
+                ft.replace(R.id.card_fragment_placeholder, cf);
+                ft.addToBackStack(null);
+                ft.commitAllowingStateLoss();
             }
 
             m_showingBack = !m_showingBack;
-
-            AnimatorSet as = new AnimatorSet();
-            as.playTogether(as0, as1);
-            as.start();
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
             if(savedInstanceState!=null) {
                 if(m_card==null) {
                     String cardID = savedInstanceState.getString("card_id");
@@ -182,18 +173,12 @@ public class PlayDeckFragment extends Fragment {
 
             View rootView = inflater.inflate(R.layout.play_card_fragment, container, false);
 
-            View tv1 = rootView.findViewById(android.R.id.text1);
-            ((TextView)tv1).setText(m_card.getFront());
-
-            View tv2 = rootView.findViewById(android.R.id.text2);
-            ((TextView)tv2).setText(m_card.getBack());
-
-            if(m_showingBack) {
-                View f1 = rootView.findViewById(R.id.frame1);
-                f1.setRotationX(-90.0f);
-            } else {
-                View f2 = rootView.findViewById(R.id.frame2);
-                f2.setRotationX(90.0f);
+            if(savedInstanceState==null) {
+                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                CardFragment cf = new CardFragment();
+                cf.setCardText(m_card.getFront());
+                ft.replace(R.id.card_fragment_placeholder, cf);
+                ft.commitAllowingStateLoss();
             }
 
             return rootView;
@@ -208,6 +193,40 @@ public class PlayDeckFragment extends Fragment {
                 if(m_showingBack) {
                     outState.putBoolean("showing_back", m_showingBack);
                 }
+            }
+        }
+    }
+
+    static public class CardFragment extends Fragment {
+        String m_cardText;
+
+        public void setCardText(String cardText) {
+            m_cardText = cardText;
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            if(savedInstanceState!=null) {
+                if (m_cardText == null) {
+                    m_cardText = savedInstanceState.getString("card_text");
+                }
+            }
+
+            View rootView = inflater.inflate(R.layout.card_fragment, container, false);
+
+            View tv1 = rootView.findViewById(android.R.id.text1);
+            ((TextView)tv1).setText(m_cardText);
+
+            return rootView;
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+
+            if(m_cardText!=null) {
+                outState.putString("card_text", m_cardText);
             }
         }
     }

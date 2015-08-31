@@ -1,7 +1,8 @@
 package com.kcraigie.flashcards;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -12,7 +13,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-public class DeckListFragment extends android.support.v4.app.Fragment {
+public class DeckListFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,7 +59,6 @@ public class DeckListFragment extends android.support.v4.app.Fragment {
 						int pos = (int)iv1.getTag();
 						Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(pos);
 						FCDB.Deck deck = dtm.getDeck();
-//						Toast.makeText(getActivity(), getString(R.string.playing_deck, deck.getName()), Toast.LENGTH_SHORT).show();
 						playDeck(deck, false);
 					}
 				});
@@ -71,7 +71,6 @@ public class DeckListFragment extends android.support.v4.app.Fragment {
 						int pos = (int)iv1.getTag();
 						Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(pos);
 						FCDB.Deck deck = dtm.getDeck();
-//						Toast.makeText(getActivity(), getString(R.string.playing_deck, deck.getName()), Toast.LENGTH_SHORT).show();
 						playDeck(deck, true);
 					}
 				});

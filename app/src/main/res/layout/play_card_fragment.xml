@@ -2,38 +2,6 @@
 
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_fragment_placeholder"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/cardlike"
-    android:elevation="4dp">
-
-    <!-- Using these FrameLayouts for flipping between front and back-->
-    <FrameLayout
-        android:id="@+id/frame2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <TextView
-        android:id="@android:id/text2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|center_horizontal"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/frame1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <TextView
-        android:id="@android:id/text1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|center_horizontal"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
-
-    </FrameLayout>
-
-</FrameLayout>
+    android:layout_height="match_parent" />

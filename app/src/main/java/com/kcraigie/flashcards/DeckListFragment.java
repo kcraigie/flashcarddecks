@@ -1,5 +1,6 @@
 package com.kcraigie.flashcards;
 
+import android.animation.LayoutTransition;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.app.FragmentTransaction;
@@ -8,12 +9,16 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 public class DeckListFragment extends Fragment {
+
+	int m_oldSelectedPosition = -1;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,17 +31,23 @@ public class DeckListFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		if(savedInstanceState!=null) {
+			m_oldSelectedPosition = savedInstanceState.getInt("old_selected_position", -1);
+		}
+
 		FCDB db = FCDB.getInstance(getActivity());
 		java.util.ArrayList<java.util.Map<String,String>> al = new java.util.ArrayList<java.util.Map<String,String>>();
 		for(FCDB.Deck deck: db.iterateDecks()) {
 			Wrappers.DeckToMap dtm = new Wrappers.DeckToMap(deck);
 			al.add(dtm);
 		}
+
 		final ListView lv = (ListView)getView().findViewById(R.id.deck_list_view);
+
 		ListAdapter la = new SimpleAdapter(getActivity(), al, R.layout.deck_list_item,
 						new String[] { "name" }, new int[] { android.R.id.text1 }) {
 			@Override
-			public View getView(int position, final View convertView, ViewGroup parent) {
+			public View getView(final int position, final View convertView, ViewGroup parent) {
 				View v = super.getView(position, convertView, parent);
 
 				final ImageView iv0 = (ImageView)v.findViewById(R.id.deck_list_item_edit);
@@ -56,8 +67,8 @@ public class DeckListFragment extends Fragment {
 				iv1.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						int pos = (int)iv1.getTag();
-						Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(pos);
+						int pos = (int) iv1.getTag();
+						Wrappers.DeckToMap dtm = (Wrappers.DeckToMap) lv.getItemAtPosition(pos);
 						FCDB.Deck deck = dtm.getDeck();
 						playDeck(deck, false);
 					}
@@ -68,25 +79,35 @@ public class DeckListFragment extends Fragment {
 				iv2.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						int pos = (int)iv1.getTag();
-						Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(pos);
+						int pos = (int) iv1.getTag();
+						Wrappers.DeckToMap dtm = (Wrappers.DeckToMap) lv.getItemAtPosition(pos);
 						FCDB.Deck deck = dtm.getDeck();
 						playDeck(deck, true);
 					}
 				});
 
+//				// Tweak the layout transition because by default it doesn't look right
+//				LayoutTransition lt = ((LinearLayout)v).getLayoutTransition();
+//				lt.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
+//				lt.setStartDelay(LayoutTransition.CHANGE_DISAPPEARING, 0);
+
+				// Restore selected item state on rotate et al
+				if(m_oldSelectedPosition==position) {
+					LinearLayout actionsLayout = (LinearLayout) v.findViewById(R.id.deck_list_item_actions);
+					actionsLayout.setVisibility(View.VISIBLE);
+				}
+
 				return v;
 			}
 		};
 		lv.setAdapter(la);
-//		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//				Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(position);
-//				FCDB.Deck deck = dtm.getDeck();
-//				openDeck(deck);
-//			}
-//		});
+
+		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				selectAndExpandItem(position);
+			}
+		});
 
 		Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
 		toolbar.setTitle(getString(R.string.your_decks));
@@ -102,9 +123,19 @@ public class DeckListFragment extends Fragment {
 	}
 
 	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		if(m_oldSelectedPosition!=-1) {
+			outState.putInt("old_selected_position", m_oldSelectedPosition);
+		}
+	}
+
+	@Override
 	public void onResume() {
 		super.onResume();
 
+		// Update the list when returning to this fragment (eg. after adding a new deck)
 		final ListView lv = (ListView)getView().findViewById(R.id.deck_list_view);
 		SimpleAdapter sa = (SimpleAdapter)lv.getAdapter();
 		sa.notifyDataSetChanged();
@@ -133,5 +164,25 @@ public class DeckListFragment extends Fragment {
 		ft.replace(R.id.fragment_placeholder, pdf, "PDF");
 		ft.addToBackStack(null);
 		ft.commitAllowingStateLoss();
+	}
+
+	private void selectAndExpandItem(int position) {
+		final ListView lv = (ListView)getView().findViewById(R.id.deck_list_view);
+
+		if(m_oldSelectedPosition!=-1) {
+			View lvi = lv.getChildAt(m_oldSelectedPosition-lv.getFirstVisiblePosition());
+			LinearLayout actionsLayout = (LinearLayout) lvi.findViewById(R.id.deck_list_item_actions);
+			actionsLayout.setVisibility(View.GONE);
+		}
+		if(m_oldSelectedPosition==position) {
+			// This means contract
+			position = -1;
+		}
+		if(position!=-1) {
+			View lvi = lv.getChildAt(position-lv.getFirstVisiblePosition());
+			LinearLayout actionsLayout = (LinearLayout) lvi.findViewById(R.id.deck_list_item_actions);
+			actionsLayout.setVisibility(View.VISIBLE);
+		}
+		m_oldSelectedPosition = position;
 	}
 }

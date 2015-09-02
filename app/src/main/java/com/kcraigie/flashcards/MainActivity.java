@@ -1,8 +1,11 @@
 package com.kcraigie.flashcards;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 public class MainActivity extends Activity {
 
@@ -21,6 +24,25 @@ public class MainActivity extends Activity {
 //            uiOptions |= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
 //            getWindow().getDecorView().setSystemUiVisibility(uiOptions);
 //        }
+
+		final Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onBackPressed();
+			}
+		});
+
+		getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+			@Override
+			public void onBackStackChanged() {
+				if(getFragmentManager().getBackStackEntryCount()>0) {
+					toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+				} else {
+					toolbar.setNavigationIcon(null);
+				}
+			}
+		});
 
 		if(savedInstanceState==null) {
 			FragmentTransaction ft = getFragmentManager().beginTransaction();

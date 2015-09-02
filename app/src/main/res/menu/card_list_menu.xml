@@ -8,5 +8,6 @@
         android:icon="@drawable/ic_action_delete_black"
         app:showAsAction="ifRoom"
         android:title="@string/action_delete_deck" />
+    <!--android:icon="@drawable/abc_ic_clear_mtrl_alpha"-->
 
 </menu>

@@ -1,6 +1,5 @@
 package com.kcraigie.flashcards;
 
-import android.animation.LayoutTransition;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.app.FragmentTransaction;

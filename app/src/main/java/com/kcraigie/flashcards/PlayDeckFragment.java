@@ -241,11 +241,11 @@ public class PlayDeckFragment extends Fragment {
                 tv.setTextColor(argb);
             }
 
-            // DisplayMetrics dm = new DisplayMetrics();
-            // getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+            DisplayMetrics dm = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 
-            // // Set text size to be large
-            // tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, (Math.min(dm.widthPixels, dm.heightPixels) / 6.0f));
+            // Set text size to be large
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, (Math.min(dm.widthPixels, dm.heightPixels) / 6.0f));
 
             tv.setText(m_cardText);
 

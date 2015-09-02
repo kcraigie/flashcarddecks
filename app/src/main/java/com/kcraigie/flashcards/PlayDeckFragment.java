@@ -249,8 +249,8 @@ public class PlayDeckFragment extends Fragment {
 
             tv.setText(m_cardText);
 
-            // // Pull camera away from card so rotation looks better (otherwise card appears to hit camera)
-            // rootView.setCameraDistance(10 * dm.widthPixels * dm.density);
+            // Pull camera away from card so rotation looks better (otherwise card appears to hit camera)
+            rootView.setCameraDistance(10 * dm.widthPixels * dm.density);
 
             return rootView;
         }

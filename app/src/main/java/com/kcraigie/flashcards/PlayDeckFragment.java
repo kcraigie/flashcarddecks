@@ -3,6 +3,9 @@ package com.kcraigie.flashcards;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.ColorFilter;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -50,7 +53,6 @@ public class PlayDeckFragment extends Fragment {
         }
 
         View rootView = inflater.inflate(R.layout.play_deck_fragment, container, false);
-        rootView.setCameraDistance(rootView.getCameraDistance() * 10);
 
         final ViewPager vp = (ViewPager)rootView.findViewById(R.id.pager);
         final PlayDeckAdapter pda = new PlayDeckAdapter(getFragmentManager(), m_deck, m_shouldShuffle);
@@ -146,10 +148,10 @@ public class PlayDeckFragment extends Fragment {
             FragmentTransaction ft = getChildFragmentManager().beginTransaction();
             CardFragment cf = new CardFragment();
             if(m_showingBack) {
-                cf.setCardText(m_card.getFront());
+                cf.setCardText(m_card.getFront(), false);
                 ft.setCustomAnimations(R.animator.card_flip_left_in, R.animator.card_flip_left_out);
             } else {
-                cf.setCardText(m_card.getBack());
+                cf.setCardText(m_card.getBack(), true);
                 ft.setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out);
             }
             ft.replace(R.id.card_fragment_placeholder, cf);
@@ -175,7 +177,7 @@ public class PlayDeckFragment extends Fragment {
             if(savedInstanceState==null) {
                 FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                 CardFragment cf = new CardFragment();
-                cf.setCardText(m_card.getFront());
+                cf.setCardText(m_card.getFront(), false);
                 ft.replace(R.id.card_fragment_placeholder, cf);
                 ft.commitAllowingStateLoss();
             }
@@ -198,9 +200,11 @@ public class PlayDeckFragment extends Fragment {
 
     static public class CardFragment extends Fragment {
         String m_cardText;
+        boolean m_invertColors;
 
-        public void setCardText(String cardText) {
+        public void setCardText(String cardText, boolean invertColors) {
             m_cardText = cardText;
+            m_invertColors = invertColors;
         }
 
         @Nullable
@@ -210,18 +214,43 @@ public class PlayDeckFragment extends Fragment {
                 if (m_cardText == null) {
                     m_cardText = savedInstanceState.getString("card_text");
                 }
+                m_invertColors = savedInstanceState.getBoolean("invert_colors", false);
             }
 
             View rootView = inflater.inflate(R.layout.card_fragment, container, false);
 
-            TextView tv1 = (TextView)rootView.findViewById(android.R.id.text1);
+            TextView tv = (TextView)rootView.findViewById(android.R.id.text1);
 
-            // Set text size to be large
-            DisplayMetrics dm = new DisplayMetrics();
-            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            tv1.setTextSize(TypedValue.COMPLEX_UNIT_PX, (Math.min(dm.widthPixels, dm.heightPixels) / 6.0f));
+            if(m_invertColors) {
+                Drawable bg = rootView.getBackground();
+                //To generate negative image
+                float[] colorMatrix_Negative = {
+                        -1.0f, 0, 0, 0, 255, //red
+                        0, -1.0f, 0, 0, 255, //green
+                        0, 0, -1.0f, 0, 255, //blue
+                        0, 0, 0, 1.0f, 0 //alpha
+                };
+                ColorFilter colorFilter_Negative = new ColorMatrixColorFilter(colorMatrix_Negative);
+                bg.setColorFilter(colorFilter_Negative);
+                rootView.setBackground(bg);
 
-            tv1.setText(m_cardText);
+                int argb = tv.getCurrentTextColor();
+                argb = ~argb;
+                // TODO: Reset alpha value?
+//                argb |= 0xff000000;
+                tv.setTextColor(argb);
+            }
+
+            // DisplayMetrics dm = new DisplayMetrics();
+            // getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+            // // Set text size to be large
+            // tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, (Math.min(dm.widthPixels, dm.heightPixels) / 6.0f));
+
+            tv.setText(m_cardText);
+
+            // // Pull camera away from card so rotation looks better (otherwise card appears to hit camera)
+            // rootView.setCameraDistance(10 * dm.widthPixels * dm.density);
 
             return rootView;
         }
@@ -232,6 +261,7 @@ public class PlayDeckFragment extends Fragment {
 
             if(m_cardText!=null) {
                 outState.putString("card_text", m_cardText);
+                outState.putBoolean("invert_colors", m_invertColors);
             }
         }
     }

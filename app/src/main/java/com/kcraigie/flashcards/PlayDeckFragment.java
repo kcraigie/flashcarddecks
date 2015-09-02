@@ -9,6 +9,8 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -212,8 +214,14 @@ public class PlayDeckFragment extends Fragment {
 
             View rootView = inflater.inflate(R.layout.card_fragment, container, false);
 
-            View tv1 = rootView.findViewById(android.R.id.text1);
-            ((TextView)tv1).setText(m_cardText);
+            TextView tv1 = (TextView)rootView.findViewById(android.R.id.text1);
+
+            // Set text size to be large
+            DisplayMetrics dm = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+            tv1.setTextSize(TypedValue.COMPLEX_UNIT_PX, (Math.min(dm.widthPixels, dm.heightPixels) / 6.0f));
+
+            tv1.setText(m_cardText);
 
             return rootView;
         }

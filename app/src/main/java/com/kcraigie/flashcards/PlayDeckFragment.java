@@ -26,11 +26,23 @@ import java.util.Collections;
 
 public class PlayDeckFragment extends Fragment {
     FCDB.Deck m_deck;
-    boolean m_shouldShuffle;
+    FCDB.Card[] m_cards;
 
     public void setDeck(FCDB.Deck deck, boolean shouldShuffle) {
         m_deck = deck;
-        m_shouldShuffle = shouldShuffle;
+
+        // Pull out all the cards here and turn them into an array...
+        // TODO: Is this the most efficient way to do this?
+        ArrayList<FCDB.Card> al = new ArrayList<>();
+        // TODO: Leaking cursor?
+        for(FCDB.Card card: m_deck.iterateCards()) {
+            al.add(card);
+        }
+        if(shouldShuffle) {
+            Collections.shuffle(al);
+        }
+        m_cards = al.toArray(new FCDB.Card[al.size()]);
+
     }
 
     @Override
@@ -50,12 +62,20 @@ public class PlayDeckFragment extends Fragment {
                     m_deck = db.findDeckByID(deckID);
                 }
             }
+            if(m_cards==null) {
+                String cardIDs = savedInstanceState.getString("card_ids");
+                if(cardIDs!=null) {
+                    String[] cardIDs2 = cardIDs.split(",");
+                    FCDB db = FCDB.getInstance(getActivity());
+                    m_cards = db.findCardsByIDs(cardIDs2);
+                }
+            }
         }
 
         View rootView = inflater.inflate(R.layout.play_deck_fragment, container, false);
 
         final ViewPager vp = (ViewPager)rootView.findViewById(R.id.pager);
-        final PlayDeckAdapter pda = new PlayDeckAdapter(getFragmentManager(), m_deck, m_shouldShuffle);
+        final PlayDeckAdapter pda = new PlayDeckAdapter(getFragmentManager(), m_cards);
         vp.setAdapter(pda);
 
         // Set up detection of single tap
@@ -93,6 +113,16 @@ public class PlayDeckFragment extends Fragment {
         if(m_deck!=null) {
             outState.putString("deck_id", m_deck.getID());
         }
+        if(m_cards!=null) {
+            StringBuilder result = new StringBuilder();
+            for(int i=0;i<m_cards.length;i++) {
+                if(i>0) {
+                    result.append(",");
+                }
+                result.append(m_cards[i].getID());
+            }
+            outState.putString("card_ids", result.toString());
+        }
     }
 
     @Override
@@ -105,23 +135,17 @@ public class PlayDeckFragment extends Fragment {
     }
 
     class PlayDeckAdapter extends FragmentStatePagerAdapter {
-        ArrayList<FCDB.Card> m_alCards;
+        FCDB.Card[] m_cards;
 
-        public PlayDeckAdapter(FragmentManager fm, FCDB.Deck deck, boolean shouldShuffle) {
+        public PlayDeckAdapter(FragmentManager fm, FCDB.Card[] cards) {
             super(fm);
-
-            m_alCards = new ArrayList<FCDB.Card>();
-            for(FCDB.Card card: m_deck.iterateCards()) {
-                m_alCards.add(card);
-            }
-            if(shouldShuffle) {
-                Collections.shuffle(m_alCards);
-            }
+            m_cards = cards;
         }
 
         @Override
         public Fragment getItem(int position) {
-            FCDB.Card card = m_alCards.get(position);
+            // TODO: Check bounds?
+            FCDB.Card card = m_cards[position];
             PlayCardFragment f = null;
             if(card!=null) {
                 f = new PlayCardFragment();
@@ -132,7 +156,7 @@ public class PlayDeckFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return m_alCards.size();
+            return m_cards.length;
         }
     }
 
@@ -244,7 +268,7 @@ public class PlayDeckFragment extends Fragment {
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 
-            // Set text size to be large
+            // TODO: Set text size to be large... this doesn't work well, need a better solution
             tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, (Math.min(dm.widthPixels, dm.heightPixels) / 6.0f));
 
             tv.setText(m_cardText);

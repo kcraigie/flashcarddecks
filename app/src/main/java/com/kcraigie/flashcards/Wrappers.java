@@ -21,7 +21,7 @@ public class Wrappers {
                 @Override
                 public Iterator<Entry<String, String>> iterator() {
                     java.util.ArrayList<java.util.Map.Entry<String, String>> al = new java.util.ArrayList<java.util.Map.Entry<String, String>>();
-                    al.add(new java.util.AbstractMap.SimpleEntry<String, String>("name", m_deck.getName()));
+                    al.add(new java.util.AbstractMap.SimpleEntry<>("name", m_deck.getName()));
                     return al.iterator();
                 }
                 @Override
@@ -56,9 +56,9 @@ public class Wrappers {
                     if(cardBack!=null) {
                         cardFrontSlashBack += " / " + cardBack;
                     }
-					al.add(new java.util.AbstractMap.SimpleEntry<String, String>("front", cardFront));
-					al.add(new java.util.AbstractMap.SimpleEntry<String, String>("back", cardBack));
-                    al.add(new java.util.AbstractMap.SimpleEntry<String, String>("front / back", cardFrontSlashBack));
+					al.add(new java.util.AbstractMap.SimpleEntry<>("front", cardFront));
+					al.add(new java.util.AbstractMap.SimpleEntry<>("back", cardBack));
+					al.add(new java.util.AbstractMap.SimpleEntry<>("front / back", cardFrontSlashBack));
 					return al.iterator();
 				}
 				@Override

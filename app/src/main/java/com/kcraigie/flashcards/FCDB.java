@@ -1,6 +1,11 @@
 package com.kcraigie.flashcards;
 
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -50,12 +55,13 @@ public class FCDB extends SQLiteOpenHelper {
 			SQLiteDatabase db = getDB();
 			ContentValues cv = new ContentValues();
 			cv.put("last_accessed", System.currentTimeMillis()/1000L);
-			db.update("decks", cv, "id=?", new String[] { getID() });
+			db.update("decks", cv, "id=?", new String[]{getID()});
 			final Cursor cur = db.query("cards", null, "deck_id=?", new String[] { getID() }, null, null, "sequence", null);
 			Iterable<Card> fcs = null;
 			if(cur!=null) {
 				fcs = new Iterable<Card>() {
 					public Iterator<Card> iterator() {
+						// TODO: Leaking cursor?
 						return new CardIterator(cur);
 					}
 				};
@@ -82,8 +88,11 @@ public class FCDB extends SQLiteOpenHelper {
 			long cardRowID = db.insert("cards", null, cv);
 			if(cardRowID!=-1) {
 				Cursor cur = db.query("cards", null, "ROWID=?", new String[] { Long.toString(cardRowID) }, null, null, null, "1");
-				if(cur!=null && cur.moveToNext()) {
-					card = new Card(cur);
+				if(cur!=null) {
+					if(cur.moveToNext()) {
+						card = new Card(cur);
+					}
+					cur.close();
 				}
 			}
 			return card;
@@ -130,7 +139,7 @@ public class FCDB extends SQLiteOpenHelper {
 		}
 	}
 	
-	public abstract class MyBaseIterator<T> implements Iterator<T> {
+	public abstract class MyBaseIterator<T> implements Iterator<T>, Closeable {
 		protected Cursor m_cursor;
 		protected boolean m_hasNext;
 
@@ -147,6 +156,11 @@ public class FCDB extends SQLiteOpenHelper {
 		@Override
 		public void remove() {
 			// TODO Support this?
+		}
+
+		@Override
+		public void close() throws IOException {
+			m_cursor.close();
 		}
 	}
 	
@@ -194,6 +208,7 @@ public class FCDB extends SQLiteOpenHelper {
 			if(cur!=null) {
 				fcls = new Iterable<Deck>() {
 					public Iterator<Deck> iterator() {
+						// TODO: Leaking cursor?
 						return new DeckIterator(cur);
 					}
 				};
@@ -214,8 +229,11 @@ public class FCDB extends SQLiteOpenHelper {
 		long deckRowID = db.insert("decks", null, cv);
 		if(deckRowID!=-1) {
 			Cursor cur = db.query("decks", null, "ROWID=?", new String[] { Long.toString(deckRowID) }, null, null, null, "1");
-			if(cur!=null && cur.moveToNext()) {
-				deck = new Deck(cur);
+			if(cur!=null) {
+				if(cur.moveToNext()) {
+					deck = new Deck(cur);
+				}
+				cur.close();
 			}
 		}
 		return deck;
@@ -238,9 +256,12 @@ public class FCDB extends SQLiteOpenHelper {
 		SQLiteDatabase db = getDB();
 		Deck deck = null;
 		Cursor cur = db.query("decks", null, "id=?", new String[]{id}, null, null, null, "1");
-		if(cur!=null && cur.moveToNext()) {
-			deck = new Deck(cur);
-			Log.d(getClass().toString(), "Found deck with name: '" + deck.getName() + "' by ID: '" + deck.getID() + "'");
+		if(cur!=null) {
+			if(cur.moveToNext()) {
+				deck = new Deck(cur);
+				Log.d(getClass().toString(), "Found deck with name: '" + deck.getName() + "' by ID: '" + deck.getID() + "'");
+			}
+			cur.close();
 		} else {
 			Log.d(getClass().toString(), "Couldn't find deck by ID: '" + id + "'");
 		}
@@ -251,13 +272,47 @@ public class FCDB extends SQLiteOpenHelper {
 		SQLiteDatabase db = getDB();
 		Card card = null;
 		Cursor cur = db.query("cards", null, "id=?", new String[]{id}, null, null, null, "1");
-		if(cur!=null && cur.moveToNext()) {
-			card = new Card(cur);
-			Log.d(getClass().toString(), "Found card with front: '" + card.getFront() + "' and back: '" + card.getBack() + "' by ID: '" + card.getID() + "'");
+		if(cur!=null) {
+			if(cur.moveToNext()) {
+				card = new Card(cur);
+				Log.d(getClass().toString(), "Found card with front: '" + card.getFront() + "' and back: '" + card.getBack() + "' by ID: '" + card.getID() + "'");
+			}
+			cur.close();
 		} else {
 			Log.d(getClass().toString(), "Couldn't find card by ID: '" + id + "'");
 		}
 		return card;
+	}
+
+	public Card[] findCardsByIDs(String[] ids) {
+		// Build a string with a bunch of question marks for the WHERE clause,
+		// and also populate a HashMap with ids-to-indices, so we can sort the result
+		HashMap<String,Integer> hm = new HashMap<>(ids.length);
+		StringBuilder result = new StringBuilder("(");
+		for(int i=0;i<ids.length;i++) {
+			if(i>0) {
+				result.append(",");
+			}
+			result.append("?");
+			hm.put(ids[i], i);
+		}
+		result.append(")");
+
+		SQLiteDatabase db = getDB();
+		Cursor cur = db.query("cards", null, "id IN " + result, ids, null, null, null, null);
+		Card[] ret = new Card[ids.length];
+		if(cur!=null) {
+			// TODO: Handle the case of not enough cards found?
+			while (cur.moveToNext()) {
+				Card card = new Card(cur);
+				// TODO: Handle the case of a null index?
+				Integer index = hm.get(card.getID());
+				ret[index] = card;
+				Log.d(getClass().toString(), "Found card #" + index + " with front: '" + card.getFront() + "' and back: '" + card.getBack() + "' by ID: '" + card.getID() + "'");
+			}
+			cur.close();
+		}
+		return ret;
 	}
 
 	private static FCDB theInstance = null;

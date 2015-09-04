@@ -75,7 +75,7 @@ public class CardListFragment extends Fragment {
 
         // Populate initial list of cards
         if(m_deck!=null) {
-            for (FCDB.Card card : m_deck.iterateCards()) {
+            for (FCDB.Card card: m_deck.iterateCards()) {
                 Wrappers.CardToMap ctm = new Wrappers.CardToMap(card);
                 m_alCards.add(ctm);
             }

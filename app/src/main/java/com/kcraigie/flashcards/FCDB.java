@@ -1,11 +1,7 @@
 package com.kcraigie.flashcards;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -51,22 +47,16 @@ public class FCDB extends SQLiteOpenHelper {
 		public String getID() { return m_id; }
 		public String getName() { return m_name; }
 		
-		public Iterable<Card> iterateCards() {
+		public CardIterator iterateCards() {
 			SQLiteDatabase db = getDB();
 			ContentValues cv = new ContentValues();
 			cv.put("last_accessed", System.currentTimeMillis()/1000L);
 			db.update("decks", cv, "id=?", new String[]{getID()});
-			final Cursor cur = db.query("cards", null, "deck_id=?", new String[] { getID() }, null, null, "sequence", null);
-			Iterable<Card> fcs = null;
+			Cursor cur = db.query("cards", null, "deck_id=?", new String[] { getID() }, null, null, "sequence", null);
 			if(cur!=null) {
-				fcs = new Iterable<Card>() {
-					public Iterator<Card> iterator() {
-						// TODO: Leaking cursor?
-						return new CardIterator(cur);
-					}
-				};
+				return new CardIterator(cur);
 			}
-			return fcs;
+			return null;
 		}
 		
 		public Card createCard(String front, String back) {
@@ -139,7 +129,7 @@ public class FCDB extends SQLiteOpenHelper {
 		}
 	}
 	
-	public abstract class MyBaseIterator<T> implements Iterator<T>, Closeable {
+	public abstract class MyBaseIterator<T> implements Iterator<T> {
 		protected Cursor m_cursor;
 		protected boolean m_hasNext;
 
@@ -152,43 +142,49 @@ public class FCDB extends SQLiteOpenHelper {
 		public boolean hasNext() {
 			return m_hasNext;
 		}
-		
+
+		@Override
+		public T next() {
+			T thing = null;
+			if(m_hasNext) {
+				thing = newThing(m_cursor);
+				m_hasNext = m_cursor.moveToNext();
+			}
+			return thing;
+		}
+
 		@Override
 		public void remove() {
 			// TODO Support this?
 		}
 
-		@Override
-		public void close() throws IOException {
+		public void close() {
 			m_cursor.close();
 		}
+
+		// Subclass must return a new T(cur) for next()
+		abstract protected T newThing(Cursor cur);
 	}
 	
 	public class DeckIterator extends MyBaseIterator<Deck> {
-		public DeckIterator(Cursor cursor) { super(cursor); }
+		public DeckIterator(Cursor cursor) {
+			super(cursor);
+		}
 
 		@Override
-		public Deck next() {
-			Deck deck= null;
-			if(m_hasNext) {
-				deck = new Deck(m_cursor);
-				m_hasNext = m_cursor.moveToNext();
-			}
-			return deck;
+		protected Deck newThing(Cursor cur) {
+			return new Deck(cur);
 		}
 	}
 	
 	public class CardIterator extends MyBaseIterator<Card> {
-		public CardIterator(Cursor cursor) { super(cursor); }
+		public CardIterator(Cursor cursor) {
+			super(cursor);
+		}
 
 		@Override
-		public Card next() {
-			Card card = null;
-			if(m_hasNext) {
-				card = new Card(m_cursor);
-				m_hasNext = m_cursor.moveToNext();
-			}
-			return card;
+		protected Card newThing(Cursor cur) {
+			return new Card(cur);
 		}
 	}
 
@@ -200,21 +196,16 @@ public class FCDB extends SQLiteOpenHelper {
 		return theDB;
 	}
 
-	public Iterable<Deck> iterateDecks() {
-		Iterable<Deck> fcls = null;
+	public DeckIterator iterateDecks() {
+		DeckIterator fcds = null;
 		SQLiteDatabase db = getDB();
 		if(db!=null) {
-			final Cursor cur = db.query("decks", null, null, null, null, null, "last_accessed DESC", null);
+			Cursor cur = db.query("decks", null, null, null, null, null, "last_accessed DESC", null);
 			if(cur!=null) {
-				fcls = new Iterable<Deck>() {
-					public Iterator<Deck> iterator() {
-						// TODO: Leaking cursor?
-						return new DeckIterator(cur);
-					}
-				};
+				fcds = new DeckIterator(cur);
 			}
 		}
-		return fcls;
+		return fcds;
 	}
 
 	public Deck createDeck(String name) {
@@ -222,8 +213,8 @@ public class FCDB extends SQLiteOpenHelper {
 		SQLiteDatabase db = getDB();
 		Deck deck = null;
 		ContentValues cv = new ContentValues();
-		String fclID = generateID();
-		cv.put("id", fclID);
+		String fcdID = generateID();
+		cv.put("id", fcdID);
 		cv.put("name", name);
 		cv.put("last_accessed", System.currentTimeMillis()/1000L);
 		long deckRowID = db.insert("decks", null, cv);

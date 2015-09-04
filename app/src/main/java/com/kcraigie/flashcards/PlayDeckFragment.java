@@ -34,9 +34,13 @@ public class PlayDeckFragment extends Fragment {
         // Pull out all the cards here and turn them into an array...
         // TODO: Is this the most efficient way to do this?
         ArrayList<FCDB.Card> al = new ArrayList<>();
-        // TODO: Leaking cursor?
-        for(FCDB.Card card: m_deck.iterateCards()) {
-            al.add(card);
+        FCDB.CardIterator ci = m_deck.iterateCards();
+        if(ci!=null) {
+            while(ci.hasNext()) {
+                FCDB.Card card = ci.next();
+                al.add(card);
+            }
+            ci.close();
         }
         if(shouldShuffle) {
             Collections.shuffle(al);

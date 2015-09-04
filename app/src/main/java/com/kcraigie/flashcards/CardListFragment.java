@@ -75,11 +75,17 @@ public class CardListFragment extends Fragment {
 
         // Populate initial list of cards
         if(m_deck!=null) {
-            for (FCDB.Card card: m_deck.iterateCards()) {
-                Wrappers.CardToMap ctm = new Wrappers.CardToMap(card);
-                m_alCards.add(ctm);
+            FCDB.CardIterator ci = m_deck.iterateCards();
+            if(ci!=null) {
+                while(ci.hasNext()) {
+                    FCDB.Card card = ci.next();
+                    Wrappers.CardToMap ctm = new Wrappers.CardToMap(card);
+                    m_alCards.add(ctm);
+                }
+                ci.close();
             }
         }
+
         final ListView lv = (ListView)getView().findViewById(R.id.card_list_view);
         final SimpleAdapter sa = new SimpleAdapter(getActivity(), m_alCards, R.layout.card_list_item,
                 new String[] { "front / back" }, new int[] { android.R.id.text1 }) {

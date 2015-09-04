@@ -35,10 +35,15 @@ public class DeckListFragment extends Fragment {
 		}
 
 		FCDB db = FCDB.getInstance(getActivity());
-		java.util.ArrayList<java.util.Map<String,String>> al = new java.util.ArrayList<java.util.Map<String,String>>();
-		for(FCDB.Deck deck: db.iterateDecks()) {
-			Wrappers.DeckToMap dtm = new Wrappers.DeckToMap(deck);
-			al.add(dtm);
+		java.util.ArrayList<java.util.Map<String,String>> al = new java.util.ArrayList<>();
+		FCDB.DeckIterator di = db.iterateDecks();
+		if(di!=null) {
+			while(di.hasNext()) {
+				FCDB.Deck deck = di.next();
+				Wrappers.DeckToMap dtm = new Wrappers.DeckToMap(deck);
+				al.add(dtm);
+			}
+			di.close();
 		}
 
 		final ListView lv = (ListView)getView().findViewById(R.id.deck_list_view);

@@ -13,6 +13,7 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -79,6 +80,7 @@ public class PlayDeckFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.play_deck_fragment, container, false);
 
         final ViewPager vp = (ViewPager)rootView.findViewById(R.id.pager);
+        vp.setId(R.id.pager);
         final PlayDeckAdapter pda = new PlayDeckAdapter(getFragmentManager(), m_cards);
         vp.setAdapter(pda);
 
@@ -183,8 +185,12 @@ public class PlayDeckFragment extends Fragment {
                 ft.setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out);
             }
             ft.replace(R.id.card_fragment_placeholder, cf);
-            ft.commitAllowingStateLoss();
-            m_showingBack = !m_showingBack;
+            try {
+                ft.commitAllowingStateLoss();
+                m_showingBack = !m_showingBack;
+            } catch(IllegalStateException e) {
+                Log.w(getClass().toString(), "Caught IllegalStateException when trying to flip card, assuming activity is finishing...");
+            }
         }
 
         @Override

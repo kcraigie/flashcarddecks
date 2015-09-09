@@ -1,5 +1,5 @@
 
-package com.kcraigie.flashcards;
+package com.kcraigie.flashcarddecks;
 
 import java.util.Iterator;
 import java.util.Set;

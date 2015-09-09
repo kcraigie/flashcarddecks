@@ -1,4 +1,4 @@
-package com.kcraigie.flashcards;
+package com.kcraigie.flashcarddecks;
 
 import android.app.Activity;
 import android.app.FragmentManager;

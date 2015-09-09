@@ -1,4 +1,4 @@
-package com.kcraigie.flashcards;
+package com.kcraigie.flashcarddecks;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,7 +16,7 @@ public class FCDB extends SQLiteOpenHelper {
     private static final int DB_VERSION = 1;
 	
 	public FCDB(Context context) {
-		super(context, "flashcards", null, DB_VERSION);
+		super(context, "flashcarddecks", null, DB_VERSION);
 	}
 
 	@Override

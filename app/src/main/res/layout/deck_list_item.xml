@@ -1,79 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/cardlike"
-    android:elevation="4dp">
-    <!--android:animateLayoutChanges="true"-->
+    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+    android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+    android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:elevation="2dp">
+    <!--android:animateLayoutChanges="true">-->
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+    <!--<LinearLayout-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:minHeight="?android:attr/listPreferredItemHeight">-->
+
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:minHeight="?android:attr/listPreferredItemHeight">
+        android:layout_gravity="center_vertical"
+        android:paddingTop="16dp"
+        android:paddingBottom="20dp"
+        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:id="@android:id/text1"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingTop="16dp"
-            android:paddingBottom="20dp"
-            android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-            android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/deck_list_item_actions"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/deck_list_item_play"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:visibility="gone">
+        android:layout_gravity="center_vertical"
+        android:paddingRight="8dp"
+        android:clickable="true"
+        android:src="@drawable/ic_play" />
+    <!--android:onClick="onListItemPlayClicked"-->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
+    <ImageView
+        android:id="@+id/deck_list_item_shuffle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:clickable="true"
+        android:src="@drawable/ic_shuffle" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="end">
+    <!--</LinearLayout>-->
 
-            <ImageView
-                android:id="@+id/deck_list_item_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:clickable="true"
-                android:src="@drawable/ic_action_edit_black" />
+    <!--<LinearLayout-->
+        <!--android:id="@+id/deck_list_item_actions"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:minHeight="?android:attr/listPreferredItemHeightSmall"-->
+        <!--android:visibility="gone">-->
 
-            <ImageView
-                android:id="@+id/deck_list_item_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:clickable="true"
-                android:src="@drawable/ic_action_play_black" />
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@android:color/darker_gray"/>-->
 
-            <ImageView
-                android:id="@+id/deck_list_item_shuffle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:clickable="true"
-                android:src="@drawable/ic_action_shuffle_black" />
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:gravity="end">-->
 
-        </LinearLayout>
+            <!--<ImageView-->
+                <!--android:id="@+id/deck_list_item_edit"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:clickable="true"-->
+                <!--android:src="@drawable/ic_action_edit_black" />-->
 
-    </LinearLayout>
+            <!--<ImageView-->
+                <!--android:id="@+id/deck_list_item_play"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:clickable="true"-->
+                <!--android:src="@drawable/ic_action_play_black" />-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/deck_list_item_shuffle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:clickable="true"-->
+                <!--android:src="@drawable/ic_action_shuffle_black" />-->
+
+        <!--</LinearLayout>-->
+
+    <!--</LinearLayout>-->
 
 </LinearLayout>

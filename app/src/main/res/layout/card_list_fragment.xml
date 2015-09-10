@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/abc_control_inset_material"
+    android:paddingBottom="@dimen/abc_control_inset_material">
 
     <LinearLayout
         android:id="@+id/section_deck_name"
@@ -15,7 +17,7 @@
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:minHeight="?android:attr/listPreferredItemHeight"
         android:background="@drawable/cardlike"
-        android:elevation="4dp">
+        android:elevation="2dp">
 
         <TextView
             android:id="@+id/label_deck_name"
@@ -44,7 +46,7 @@
         android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:minHeight="?android:attr/listPreferredItemHeight"
-        android:elevation="4dp">
+        android:elevation="2dp">
 
         <TextView
             android:id="@+id/label_cards"
@@ -72,7 +74,13 @@
         android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:minHeight="?android:attr/listPreferredItemHeight"
-        android:elevation="4dp">
+        android:elevation="2dp">
+
+        <TextView
+            android:id="@+id/label_new_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_new_card" />
 
         <LinearLayout
             android:id="@+id/new_card_layout"
@@ -85,7 +93,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_new_card"
+                android:hint="@string/hint_card_front"
                 android:inputType="text" />
 
             <EditText
@@ -100,7 +108,7 @@
                 android:id="@+id/edit_card_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_new_black"
+                android:src="@drawable/ic_new"
                 android:layout_gravity="center_vertical"
                 android:background="@android:color/transparent"/>
 

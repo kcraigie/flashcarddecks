@@ -17,7 +17,7 @@ import android.widget.SimpleAdapter;
 
 public class DeckListFragment extends Fragment {
 
-	int m_oldSelectedPosition = -1;
+//	int m_oldSelectedPosition = -1;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,7 +31,7 @@ public class DeckListFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 
 		if(savedInstanceState!=null) {
-			m_oldSelectedPosition = savedInstanceState.getInt("old_selected_position", -1);
+//			m_oldSelectedPosition = savedInstanceState.getInt("old_selected_position", -1);
 		}
 
 		FCDB db = FCDB.getInstance(getActivity());
@@ -54,17 +54,17 @@ public class DeckListFragment extends Fragment {
 			public View getView(final int position, final View convertView, ViewGroup parent) {
 				View v = super.getView(position, convertView, parent);
 
-				final ImageView iv0 = (ImageView)v.findViewById(R.id.deck_list_item_edit);
-				iv0.setTag(position);
-				iv0.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						int pos = (int)iv0.getTag();
-						Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(pos);
-						FCDB.Deck deck = dtm.getDeck();
-						editDeck(deck);
-					}
-				});
+//				final ImageView iv0 = (ImageView)v.findViewById(R.id.deck_list_item_edit);
+//				iv0.setTag(position);
+//				iv0.setOnClickListener(new View.OnClickListener() {
+//					@Override
+//					public void onClick(View v) {
+//						int pos = (int)iv0.getTag();
+//						Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(pos);
+//						FCDB.Deck deck = dtm.getDeck();
+//						editDeck(deck);
+//					}
+//				});
 
 				final ImageView iv1 = (ImageView)v.findViewById(R.id.deck_list_item_play);
 				iv1.setTag(position);
@@ -95,23 +95,31 @@ public class DeckListFragment extends Fragment {
 //				lt.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
 //				lt.setStartDelay(LayoutTransition.CHANGE_DISAPPEARING, 0);
 
-				// Restore selected item state on rotate et al
-				if(m_oldSelectedPosition==position) {
-					LinearLayout actionsLayout = (LinearLayout) v.findViewById(R.id.deck_list_item_actions);
-					actionsLayout.setVisibility(View.VISIBLE);
-				}
+//				// Restore selected item state on rotate et al
+//				if(m_oldSelectedPosition==position) {
+//					LinearLayout actionsLayout = (LinearLayout) v.findViewById(R.id.deck_list_item_actions);
+//					actionsLayout.setVisibility(View.VISIBLE);
+//				}
 
 				return v;
 			}
 		};
 		lv.setAdapter(la);
-
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				selectAndExpandItem(position);
+				Wrappers.DeckToMap dtm = (Wrappers.DeckToMap)lv.getItemAtPosition(position);
+				FCDB.Deck deck = dtm.getDeck();
+				editDeck(deck);
 			}
 		});
+
+//		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//				selectAndExpandItem(position);
+//			}
+//		});
 
 		Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
 		toolbar.setTitle(getString(R.string.your_decks));
@@ -130,9 +138,9 @@ public class DeckListFragment extends Fragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		if(m_oldSelectedPosition!=-1) {
-			outState.putInt("old_selected_position", m_oldSelectedPosition);
-		}
+//		if(m_oldSelectedPosition!=-1) {
+//			outState.putInt("old_selected_position", m_oldSelectedPosition);
+//		}
 	}
 
 	@Override
@@ -170,23 +178,23 @@ public class DeckListFragment extends Fragment {
 		ft.commitAllowingStateLoss();
 	}
 
-	private void selectAndExpandItem(int position) {
-		final ListView lv = (ListView)getView().findViewById(R.id.deck_list_view);
-
-		if(m_oldSelectedPosition!=-1) {
-			View lvi = lv.getChildAt(m_oldSelectedPosition-lv.getFirstVisiblePosition());
-			LinearLayout actionsLayout = (LinearLayout) lvi.findViewById(R.id.deck_list_item_actions);
-			actionsLayout.setVisibility(View.GONE);
-		}
-		if(m_oldSelectedPosition==position) {
-			// This means contract
-			position = -1;
-		}
-		if(position!=-1) {
-			View lvi = lv.getChildAt(position-lv.getFirstVisiblePosition());
-			LinearLayout actionsLayout = (LinearLayout) lvi.findViewById(R.id.deck_list_item_actions);
-			actionsLayout.setVisibility(View.VISIBLE);
-		}
-		m_oldSelectedPosition = position;
-	}
+//	private void selectAndExpandItem(int position) {
+//		final ListView lv = (ListView)getView().findViewById(R.id.deck_list_view);
+//
+//		if(m_oldSelectedPosition!=-1) {
+//			View lvi = lv.getChildAt(m_oldSelectedPosition-lv.getFirstVisiblePosition());
+//			LinearLayout actionsLayout = (LinearLayout) lvi.findViewById(R.id.deck_list_item_actions);
+//			actionsLayout.setVisibility(View.GONE);
+//		}
+//		if(m_oldSelectedPosition==position) {
+//			// This means contract
+//			position = -1;
+//		}
+//		if(position!=-1) {
+//			View lvi = lv.getChildAt(position-lv.getFirstVisiblePosition());
+//			LinearLayout actionsLayout = (LinearLayout) lvi.findViewById(R.id.deck_list_item_actions);
+//			actionsLayout.setVisibility(View.VISIBLE);
+//		}
+//		m_oldSelectedPosition = position;
+//	}
 }

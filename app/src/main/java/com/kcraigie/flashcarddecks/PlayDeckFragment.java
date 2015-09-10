@@ -3,9 +3,6 @@ package com.kcraigie.flashcarddecks;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.graphics.ColorFilter;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -255,24 +252,14 @@ public class PlayDeckFragment extends Fragment {
 
             TextView tv = (TextView)rootView.findViewById(android.R.id.text1);
 
+            int lightColor = getResources().getColor(R.color.card_background);
+            int darkColor = tv.getTextColors().getDefaultColor();
             if(m_invertColors) {
-                Drawable bg = rootView.getBackground();
-                //To generate negative image
-                float[] colorMatrix_Negative = {
-                        -1.0f, 0, 0, 0, 255, //red
-                        0, -1.0f, 0, 0, 255, //green
-                        0, 0, -1.0f, 0, 255, //blue
-                        0, 0, 0, 1.0f, 0 //alpha
-                };
-                ColorFilter colorFilter_Negative = new ColorMatrixColorFilter(colorMatrix_Negative);
-                bg.setColorFilter(colorFilter_Negative);
-                rootView.setBackground(bg);
-
-                int argb = tv.getCurrentTextColor();
-                argb = ~argb;
-                // TODO: Reset alpha value?
-//                argb |= 0xff000000;
-                tv.setTextColor(argb);
+                rootView.setBackgroundColor(darkColor);
+                tv.setTextColor(lightColor);
+            } else {
+                rootView.setBackgroundColor(lightColor);
+                tv.setTextColor(darkColor);
             }
 
             DisplayMetrics dm = new DisplayMetrics();

@@ -11,11 +11,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import java.util.Map;
 
@@ -93,17 +95,17 @@ public class CardListFragment extends Fragment {
             public View getView(int position, final View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
 
-                final ImageView iv0 = (ImageView)v.findViewById(R.id.card_list_item_edit);
-                iv0.setTag(position);
-                iv0.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int pos = (int)iv0.getTag();
-                        Wrappers.CardToMap ctm = (Wrappers.CardToMap)lv.getItemAtPosition(pos);
-                        FCDB.Card card = ctm.getCard();
-                        editCard(card);
-                    }
-                });
+//                final ImageView iv0 = (ImageView)v.findViewById(R.id.card_list_item_edit);
+//                iv0.setTag(position);
+//                iv0.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        int pos = (int)iv0.getTag();
+//                        Wrappers.CardToMap ctm = (Wrappers.CardToMap)lv.getItemAtPosition(pos);
+//                        FCDB.Card card = ctm.getCard();
+//                        editCard(card);
+//                    }
+//                });
 
                 final ImageView iv1 = (ImageView)v.findViewById(R.id.card_list_item_delete);
                 iv1.setTag(position);
@@ -121,6 +123,14 @@ public class CardListFragment extends Fragment {
             }
         };
         lv.setAdapter(sa);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Wrappers.CardToMap ctm = (Wrappers.CardToMap)lv.getItemAtPosition(position);
+                FCDB.Card card = ctm.getCard();
+                editCard(card);
+            }
+        });
 
         // TODO: Restore listview's scroll position after rotate
 
@@ -193,9 +203,9 @@ public class CardListFragment extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    etCardFront.setHint(R.string.hint_card_front);
-                    etCardBack.setVisibility(View.VISIBLE);
-                    ibAddCard.setVisibility(View.VISIBLE);
+//                    etCardFront.setHint(R.string.hint_card_front);
+//                    etCardBack.setVisibility(View.VISIBLE);
+//                    ibAddCard.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -213,18 +223,20 @@ public class CardListFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        final EditText etCardFront = (EditText)getView().findViewById(R.id.edit_card_front);
-        final EditText etCardBack = (EditText)getView().findViewById(R.id.edit_card_back);
-        final ImageButton ibAddCard = (ImageButton)getView().findViewById(R.id.edit_card_add);
+        TextView tvNewCard = (TextView)getView().findViewById(R.id.label_new_card);
+        EditText etCardFront = (EditText)getView().findViewById(R.id.edit_card_front);
+        EditText etCardBack = (EditText)getView().findViewById(R.id.edit_card_back);
+        ImageButton ibAddCard = (ImageButton)getView().findViewById(R.id.edit_card_add);
 
-        if(!(etCardFront.hasFocus() || etCardBack.hasFocus() || etCardFront.length()>0 || etCardBack.length()>0)) {
-            etCardBack.setVisibility(View.GONE);
-        }
-        if(!(etCardFront.length()>0 || etCardBack.length()>0)) {
-            etCardBack.setEnabled(true);
-        }
+//        if(!(etCardFront.hasFocus() || etCardBack.hasFocus() || etCardFront.length()>0 || etCardBack.length()>0)) {
+//            etCardBack.setVisibility(View.GONE);
+//        }
+        boolean enabled = etCardFront.length() > 0;
+        etCardBack.setEnabled(enabled);
+        ibAddCard.setEnabled(enabled);
         if(m_editingCard !=null) {
-            ibAddCard.setImageResource(R.drawable.ic_action_done_black);
+            tvNewCard.setText(R.string.edit_card);
+            ibAddCard.setImageResource(R.drawable.ic_check);
         }
     }
 
@@ -262,6 +274,7 @@ public class CardListFragment extends Fragment {
     }
 
     private void editCard(FCDB.Card card) {
+        TextView tvNewCard = (TextView)getView().findViewById(R.id.label_new_card);
         EditText etCardFront = (EditText)getView().findViewById(R.id.edit_card_front);
         EditText etCardBack = (EditText)getView().findViewById(R.id.edit_card_back);
         ImageButton ibAddCard = (ImageButton)getView().findViewById(R.id.edit_card_add);
@@ -269,11 +282,13 @@ public class CardListFragment extends Fragment {
         m_editingCard = card;
         etCardFront.setText(card.getFront());
         etCardBack.setText(card.getBack());
-        ibAddCard.setImageResource(R.drawable.ic_action_done_black);
+        tvNewCard.setText(R.string.edit_card);
+        ibAddCard.setImageResource(R.drawable.ic_check);
         etCardFront.requestFocus();
     }
 
     private void saveCard() {
+        TextView tvNewCard = (TextView)getView().findViewById(R.id.label_new_card);
         EditText etCardFront = (EditText) getView().findViewById(R.id.edit_card_front);
         EditText etCardBack = (EditText) getView().findViewById(R.id.edit_card_back);
         ImageButton ibAddCard = (ImageButton) getView().findViewById(R.id.edit_card_add);
@@ -296,9 +311,10 @@ public class CardListFragment extends Fragment {
         m_editingCard = null;
 
         if (card != null) {
+            tvNewCard.setText(R.string.label_new_card);
             etCardFront.setText("");
             etCardBack.setText("");
-            ibAddCard.setImageResource(R.drawable.ic_action_new_black);
+            ibAddCard.setImageResource(R.drawable.ic_new);
             sa.notifyDataSetChanged();
 //            lv.smoothScrollToPosition(lv.getCount()-1);
             etCardFront.requestFocus();

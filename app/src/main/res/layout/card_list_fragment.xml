@@ -1,86 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/abc_control_inset_material"
-    android:paddingBottom="@dimen/abc_control_inset_material">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/section_deck_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-        android:minHeight="?android:attr/listPreferredItemHeight"
-        android:background="@drawable/cardlike"
-        android:elevation="2dp">
-
-        <TextView
-            android:id="@+id/label_deck_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/label_deck_name" />
-
-        <EditText
-            android:id="@+id/edit_deck_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_new_deck_name"
-            android:inputType="text" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/section_cards"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:background="@drawable/cardlike"
-        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-        android:minHeight="?android:attr/listPreferredItemHeight"
-        android:elevation="2dp">
-
-        <TextView
-            android:id="@+id/label_cards"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/label_cards" />
+        android:paddingTop="@dimen/abc_control_inset_material"
+        android:paddingBottom="@dimen/abc_control_inset_material">
 
         <ListView
             android:id="@+id/card_list_view"
             android:transcriptMode="alwaysScroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@android:color/transparent" />
+            android:minHeight="?android:attr/listPreferredItemHeight"
+            android:divider="@null"
+            android:paddingTop="?attr/actionBarSize"
+            android:paddingBottom="?attr/actionBarSize"
+            android:clipToPadding="false"
+            android:scrollbarStyle="outsideOverlay" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/section_new_card"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/cardlike"
-        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-        android:minHeight="?android:attr/listPreferredItemHeight"
-        android:elevation="2dp">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/MyToolbarTheme"
+        android:elevation="4dp">
 
-        <TextView
-            android:id="@+id/label_new_card"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/label_new_card" />
 
         <LinearLayout
             android:id="@+id/new_card_layout"
@@ -108,12 +63,13 @@
                 android:id="@+id/edit_card_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_new"
+                android:src="@drawable/ic_new_white"
                 android:layout_gravity="center_vertical"
-                android:background="@android:color/transparent"/>
+                android:background="@android:color/transparent"
+                android:paddingRight="8dp" />
 
         </LinearLayout>
 
-    </LinearLayout>
+    </android.support.v7.widget.Toolbar>
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/abc_control_inset_material"
-    android:paddingBottom="@dimen/abc_control_inset_material">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/deck_list_view"
-        android:transcriptMode="alwaysScroll"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/abc_control_inset_material"
+        android:paddingBottom="@dimen/abc_control_inset_material">
+
+        <ListView
+            android:id="@+id/deck_list_view"
+            android:transcriptMode="alwaysScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:paddingTop="?attr/actionBarSize"
+            android:clipToPadding="false"
+            android:scrollbarStyle="outsideOverlay" />
+
+    </LinearLayout>
 
 </RelativeLayout>

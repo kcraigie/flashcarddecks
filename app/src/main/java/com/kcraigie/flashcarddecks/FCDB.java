@@ -89,6 +89,9 @@ public class FCDB extends SQLiteOpenHelper {
 		}
 		
 		public void renameDeck(String newName) {
+			if(m_name.equals(newName)) {
+				return;
+			}
 			SQLiteDatabase db = getDB();
 			ContentValues cv = new ContentValues();
 			cv.put("name", newName);

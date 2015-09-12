@@ -249,17 +249,11 @@ public class PlayDeckFragment extends Fragment {
             }
 
             View rootView = inflater.inflate(R.layout.card_fragment, container, false);
-
             TextView tv = (TextView)rootView.findViewById(android.R.id.text1);
 
-            int lightColor = getResources().getColor(R.color.card_background);
-            int darkColor = tv.getTextColors().getDefaultColor();
             if(m_invertColors) {
-                rootView.setBackgroundColor(darkColor);
-                tv.setTextColor(lightColor);
-            } else {
-                rootView.setBackgroundColor(lightColor);
-                tv.setTextColor(darkColor);
+                rootView.setBackgroundResource(R.drawable.cardlike_dark);
+                tv.setTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
             }
 
             DisplayMetrics dm = new DisplayMetrics();

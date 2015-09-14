@@ -2,8 +2,8 @@
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
     android:insetLeft="@dimen/abc_button_padding_horizontal_material"
     android:insetRight="@dimen/abc_button_padding_horizontal_material"
-    android:insetTop="@dimen/abc_button_inset_vertical_material"
-    android:insetBottom="@dimen/abc_button_inset_vertical_material">
+    android:insetTop="4dp"
+    android:insetBottom="4dp">
     <shape android:shape="rectangle">
         <corners android:radius="@dimen/abc_control_corner_material" />
         <solid android:color="@color/card_background_dark" />

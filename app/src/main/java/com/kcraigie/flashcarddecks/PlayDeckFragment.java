@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -172,6 +174,11 @@ public class PlayDeckFragment extends Fragment {
         }
 
         public void flipCard() {
+            if(!m_showingBack && m_card.getBack()==null) {
+                Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.wobble);
+                getView().startAnimation(shake);
+                return;
+            }
             FragmentTransaction ft = getChildFragmentManager().beginTransaction();
             CardFragment cf = new CardFragment();
             if(m_showingBack) {

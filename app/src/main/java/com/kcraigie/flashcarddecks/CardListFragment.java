@@ -244,6 +244,17 @@ public class CardListFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
+        EditText etDeckName = (EditText)toolbar.findViewById(R.id.edit_title);
+
+        etDeckName.setHint(R.string.hint_new_deck_name);
+        etDeckName.setVisibility(View.VISIBLE);
+        if(m_deck!=null) {
+            etDeckName.setText(m_deck.getName());
+        } else {
+            etDeckName.setText(null);
+        }
+
 //        TextView tvNewCard = (TextView)getView().findViewById(R.id.label_new_card);
         EditText etCardFront = (EditText)getView().findViewById(R.id.edit_card_front);
         EditText etCardBack = (EditText)getView().findViewById(R.id.edit_card_back);

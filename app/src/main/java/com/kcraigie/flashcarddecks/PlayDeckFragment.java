@@ -80,7 +80,7 @@ public class PlayDeckFragment extends Fragment {
 
         final ViewPager vp = (ViewPager)rootView.findViewById(R.id.pager);
         vp.setId(R.id.pager);
-        final PlayDeckAdapter pda = new PlayDeckAdapter(getFragmentManager(), m_cards);
+        final PlayDeckAdapter pda = new PlayDeckAdapter(getChildFragmentManager(), m_cards);
         vp.setAdapter(pda);
 
         // Set up detection of single tap

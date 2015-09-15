@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
 //            getWindow().getDecorView().setSystemUiVisibility(uiOptions);
 //        }
 
-		final Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
 		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -36,11 +36,7 @@ public class MainActivity extends Activity {
 		getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
 			@Override
 			public void onBackStackChanged() {
-				if(getFragmentManager().getBackStackEntryCount()>0) {
-					toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-				} else {
-					toolbar.setNavigationIcon(null);
-				}
+				updateNavigationIcon();
 			}
 		});
 
@@ -48,6 +44,23 @@ public class MainActivity extends Activity {
 			FragmentTransaction ft = getFragmentManager().beginTransaction();
 			ft.replace(R.id.fragment_placeholder, new DeckListFragment(), "DLF");
 			ft.commitAllowingStateLoss();
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		updateNavigationIcon();
+	}
+
+	private void updateNavigationIcon() {
+		Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+
+		if(getFragmentManager().getBackStackEntryCount()>0) {
+			toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+		} else {
+			toolbar.setNavigationIcon(null);
 		}
 	}
 }

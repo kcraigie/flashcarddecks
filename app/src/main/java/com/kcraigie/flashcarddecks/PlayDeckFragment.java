@@ -266,8 +266,11 @@ public class PlayDeckFragment extends Fragment {
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 
-            // TODO: Set text size to be large... this doesn't work well, need a better solution
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, (Math.min(dm.widthPixels, dm.heightPixels) / 6.0f));
+            // TODO: My crude heuristic algorithm to make text fit...
+            float divisor = (float)Math.sqrt(m_cardText.length()); // Linear shrank too quickly...
+            divisor *= 1.05f; // Square root was a little too large...
+            divisor = Math.max(5.0f, divisor); // Set a max size (and prevent divide-by-zero)...
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, Math.min(dm.widthPixels, dm.heightPixels) / divisor);
 
             tv.setText(m_cardText);
 

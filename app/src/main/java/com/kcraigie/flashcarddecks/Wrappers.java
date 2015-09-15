@@ -1,6 +1,8 @@
 
 package com.kcraigie.flashcarddecks;
 
+import android.support.annotation.NonNull;
+
 import java.util.Iterator;
 import java.util.Set;
 
@@ -14,13 +16,15 @@ public class Wrappers {
             m_deck = deck;
         }
 
+        @NonNull
         @Override
             public Set<Entry<String, String>> entrySet() {
             java.util.AbstractSet<java.util.Map.Entry<String, String>> ret =
                 new java.util.AbstractSet<java.util.Map.Entry<String,String>>() {
+                @NonNull
                 @Override
                 public Iterator<Entry<String, String>> iterator() {
-                    java.util.ArrayList<java.util.Map.Entry<String, String>> al = new java.util.ArrayList<java.util.Map.Entry<String, String>>();
+                    java.util.ArrayList<java.util.Map.Entry<String, String>> al = new java.util.ArrayList<>();
                     al.add(new java.util.AbstractMap.SimpleEntry<>("name", m_deck.getName()));
                     return al.iterator();
                 }
@@ -43,13 +47,15 @@ public class Wrappers {
             m_card = card;
         }
 
-		@Override
+		@NonNull
+        @Override
             public Set<java.util.Map.Entry<String, String>> entrySet() {
 			java.util.AbstractSet<java.util.Map.Entry<String, String>> ret =
                 new java.util.AbstractSet<java.util.Map.Entry<String, String>>() {
-				@Override
+				@NonNull
+                @Override
 				public Iterator<java.util.Map.Entry<String, String>> iterator() {
-					java.util.ArrayList<java.util.Map.Entry<String, String>> al = new java.util.ArrayList<java.util.Map.Entry<String, String>>();
+					java.util.ArrayList<java.util.Map.Entry<String, String>> al = new java.util.ArrayList<>();
                     String cardFront = m_card.getFront();
                     String cardBack = m_card.getBack();
                     String cardFrontSlashBack = cardFront;

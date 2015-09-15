@@ -25,9 +25,9 @@ import java.util.Map;
 
 public class CardListFragment extends Fragment {
 
-    FCDB.Deck m_deck;
-    java.util.ArrayList<Map<String,String>> m_alCards = new java.util.ArrayList<Map<String,String>>();
-    FCDB.Card m_editingCard;
+    private FCDB.Deck m_deck;
+    private java.util.ArrayList<Map<String,String>> m_alCards = new java.util.ArrayList<>();
+    private FCDB.Card m_editingCard;
 
     public void setDeck(FCDB.Deck deck) {
         m_deck = deck;

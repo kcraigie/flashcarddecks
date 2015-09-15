@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class PlayDeckFragment extends Fragment {
-    FCDB.Deck m_deck;
-    FCDB.Card[] m_cards;
+    private FCDB.Deck m_deck;
+    private FCDB.Card[] m_cards;
 
     public void setDeck(FCDB.Deck deck, boolean shouldShuffle) {
         m_deck = deck;

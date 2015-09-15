@@ -15,7 +15,7 @@ public class FCDB extends SQLiteOpenHelper {
 
     private static final int DB_VERSION = 1;
 	
-	public FCDB(Context context) {
+	private FCDB(Context context) {
 		super(context, "flashcarddecks", null, DB_VERSION);
 	}
 

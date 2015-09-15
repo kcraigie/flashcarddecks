@@ -22,7 +22,6 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:visibility="gone"/>
-        <!--android:hint="@string/hint_new_deck_name"-->
 
     </android.support.v7.widget.Toolbar>
 

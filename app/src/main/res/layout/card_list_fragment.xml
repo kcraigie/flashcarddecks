@@ -49,7 +49,8 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_card_front"
-                android:inputType="text" />
+                android:inputType="text"
+                android:imeOptions="actionNext" />
 
             <EditText
                 android:id="@+id/edit_card_back"
@@ -57,7 +58,8 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_card_back"
-                android:inputType="text" />
+                android:inputType="text"
+                android:imeOptions="actionDone" />
 
             <ImageButton
                 android:id="@+id/edit_card_add"

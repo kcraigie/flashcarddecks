@@ -7,16 +7,19 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import java.util.Map;
 
@@ -195,7 +198,7 @@ public class CardListFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 // Don't allow a card with only a back
-                if(s.length()>0) {
+                if (s.length() > 0) {
                     etCardBack.setEnabled(true);
                     ibAddCard.setEnabled(true);
                 } else {
@@ -207,13 +210,24 @@ public class CardListFragment extends Fragment {
         etCardFront.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) {
+                if (hasFocus) {
                     etCardFront.setHint(R.string.hint_card_front);
                     etCardBack.setVisibility(View.VISIBLE);
-                } else if(etCardFront.length()<1 && etCardBack.length()<1 && m_editingCard==null) {
+                } else if (etCardFront.length() < 1 && etCardBack.length() < 1 && m_editingCard == null) {
                     etCardFront.setHint(R.string.hint_new_card);
                     etCardBack.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        etCardBack.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE) {
+                    saveCard();
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -337,6 +351,9 @@ public class CardListFragment extends Fragment {
 
         String frontText = etCardFront.getText().toString().trim();
         String backText = etCardBack.getText().toString().trim();
+        if(backText.isEmpty()) {
+            backText = null;
+        }
 
         FCDB.Card card = m_editingCard;
         if (card != null) {

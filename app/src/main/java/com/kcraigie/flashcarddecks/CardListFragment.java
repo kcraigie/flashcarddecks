@@ -299,7 +299,9 @@ public class CardListFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 FCDB db = FCDB.getInstance(getActivity());
-                db.deleteDeck(m_deck);
+                if(m_deck!=null) { // Deck will be null if it's a brand-new deck without a name
+                    db.deleteDeck(m_deck);
+                }
                 getFragmentManager().popBackStackImmediate();
             }
         });

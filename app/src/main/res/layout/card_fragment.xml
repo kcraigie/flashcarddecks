@@ -3,16 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/cardlike"
-    android:elevation="2dp">
+    android:background="@drawable/cardlike">
 
     <!-- AAAARRRRRGGGGGHHHHHHHH!!!!!! THIS ELEVATION WAS MAKING CARD FLIPPING STUTTERY!!!!!!!! -->
-    <!--android:elevation="4dp">-->
+    <!--android:elevation="2dp">-->
 
     <TextView
         android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical|center_horizontal" />
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@color/secondary_text_default_material_light" />
 
 </FrameLayout>

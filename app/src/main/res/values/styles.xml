@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="MyAppTheme" parent="Theme.AppCompat.Light">
+    <style name="MyAppTheme" parent="Theme.AppCompat">
         <!-- Customize your theme here. -->
         <!--<item name="android:windowActionBar">false</item>-->
         <!--<item name="android:windowNoTitle">true</item>-->
@@ -24,9 +24,7 @@
     </style>
 
     <!-- Must have a separate theme for Toolbar -->
-     <style name="MyToolbarTheme" parent="Theme.AppCompat">
-         <item name="colorPrimary">@color/colorPrimary</item>
-         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+     <style name="MyToolbarTheme" parent="MyAppTheme">
      </style>
 
     <style name="MyAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert" />
